@@ -1,0 +1,42 @@
+---
+fortune_type: Financial
+fortunes:
+  great_luck:
+    - Be assertive, your business choices will succeed.
+    - Stay focused, keep your goals in mind and you will get financial success in the long run.
+    - A golden opportunity will arrive in an unexpected way.
+    - Your finances will go through a period of considerable expansion.
+
+  good_luck:
+    - Your hard time will be rewarded.
+    - Great wealth could be bestowed upon if you choose right.
+    - Expect to receive a financial windfall in the coming weeks.
+    - Your hard work and dedication will pay off in the form of financial rewards.
+    - As you sow, so shall you reap.
+    - Fortune favours the brave, so seize opportunities as they come.
+    - You will find that fortune favours the prepared.
+    - No unexpected costs will happen in the near future.
+
+  slightly_good_luck:
+    - There will be something important in the matters that look unprofitable on the surface.
+    - Your salary may increase.
+    - Be careful with your spendings and everything will be fine.
+    - Take calculated risks as this may lead to financial growth.
+    - Your financial situation will improve slightly thanks to smart decisions.
+    - Expect a small financial windfall soon.
+    - The road to fortune is paved with hard work and dedication.
+
+  uncertain_luck:
+    - Do not follow the whispers of the devil and the money will follow.
+    - "Tough economic times lie ahead: profit or endure."
+    - Fortunes might come, but only in the very far future and from a unsuspected source.
+    - Lady Luck brings added income today. Lady friend takes it away tonight.
+    - Be open to new opportunities.
+    - Stay flexible, and the future might lead to a better financial situation.
+    - There is much uncertainty on the market right now.
+
+  bad_luck:
+    - Rough times will be ahead.
+    - Many costs will await you in various corners of life.
+    - Energy bills will result in difficult times ahead.
+    - The sack of gold will escape your hands yet again.

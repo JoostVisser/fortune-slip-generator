@@ -1,0 +1,30 @@
+
+
+{
+    "tasks": {
+        "import_svg": {
+            "operation": "import/upload"
+        },
+        "convert_svg_to_pdf": {
+            "operation": "convert",
+            "input_format": "svg",
+            "output_format": "pdf",
+            "engine": "inkscape",
+            "input": [
+                "import_svg"
+            ],
+            "text_to_path": true,
+            "engine_version": "1.2.1",
+            "filename": "omikuji.pdf"
+        },
+        "pdf_export": {
+            "operation": "export/url",
+            "input": [
+                "convert_svg_to_pdf"
+            ],
+            "inline": false,
+            "archive_multiple_files": false
+        }
+    },
+    "tag": "jobbuilder"
+}

@@ -1,0 +1,28 @@
+---
+luck_levels:
+  great_luck:
+    jap: 大吉
+    eng: Great Luck
+  good_luck:
+    jap: 中吉
+    eng: Good Luck
+  slightly_good_luck:
+    jap: 小吉
+    eng: Slightly Good Luck
+  uncertain_luck:
+    jap: 末吉
+    eng: Uncertain luck
+  bad_luck:
+    jap: 凶
+    eng: Bad luck
+
+luck_categories:
+  general: fortune_text/general_fortunes.yaml
+  health: fortune_text/health_fortunes.yaml
+  financial: fortune_text/financial_fortunes.yaml
+  love: fortune_text/love_fortunes.yaml
+  ambition: fortune_text/ambition_fortunes.yaml
+
+templates:
+  front: fortune_template/omikuji_frontside_template.svg
+  back: fortune_template/omikuji_backside_1.svg

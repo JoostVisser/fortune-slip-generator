@@ -1,0 +1,42 @@
+---
+fortune_type: Health
+fortunes:
+  great_luck:
+    - Your body will not fail you in the moment of truth.
+    - Health is a gift, cherish it and it will last for a very long time.
+    - You will experience a surge of energy and vitality.
+    - A healthy body and mind can be found in fresh air.
+
+  good_luck:
+    - Your health luck is good, but be careful of the temperature change.
+    - Pain doesn't last forever, your healing will be swift.
+    - Take time to rest and recharge. Your body and mind will thank you for it in the long run.
+    - Sleep more and your health will improve.
+    - Be mindful of the present.
+    - Nurture your mind, body and spirit to cultivate a sense of balance.
+    - Take care of your body and it will take care of you.
+
+  slightly_good_luck:
+    - Your might get sick in the future, but you will be able to handle this well.
+    - Your dedication to maintaining a healthy lifestyle will pay off in the long run.
+    - Make sure to prioritize your physical and mental health for maximum well-being.
+    - The week is stressful, give yourself some rest.
+    - Focus on your breath to calm yourself down in the coming week.
+    - Drink less sugar for a week and you will get more energy.
+    - Walk outside to get more energy in the coming periods.
+    - Trust in the healing power of your body.
+
+  uncertain_luck:
+    - Small lifestyle changes lead to improve health.
+    - If you remain mindful of your diet your health will improve.
+    - The health of someone close to you will start changing.
+    - A change in your diet could lead to significant improvements.
+    - Excessive sleeping is a sign of bad health.
+    - Listen to your body, it tries to tell you something.
+    - Remember that health is a jouney, not a destination.
+
+  bad_luck:
+    - Your health might decline in the future, be sure to visit the doctor often.
+    - The weather will cause sickness to spread around.
+    - You will struggle with health for the foreseeable future.
+    - Energy levels will be low for the coming week.

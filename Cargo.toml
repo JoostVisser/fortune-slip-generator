@@ -1,0 +1,19 @@
+[package]
+name = "fortune_generator"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[features]
+default = ["convert_local"]
+convert_online = ["dep:reqwest", "dep:tokio"]
+convert_local = []
+
+[dependencies]
+rand = "0.8.5"
+serde_yaml = "0.9.16"
+serde = { version = "1.0.151", features = ["derive"] }
+lopdf = "0.29.0"
+reqwest = { version = "0.11", features = ["json"], optional = true }
+tokio = { version = "1", optional = true }
