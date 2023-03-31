@@ -1,8 +1,9 @@
-use crate::file_manip::{merge_pdf::merge_pdf, svg_converter::convert_svg_to_pdf};
+use crate::pdf::merge_pdf::merge_pdf;
 use rand::{seq::SliceRandom, thread_rng};
 
-pub mod file_manip;
-pub mod fortunes;
+pub mod pdf;
+pub mod svg;
+pub mod fortune;
 
 fn main() {
     println!("Hello, world!");
@@ -15,16 +16,16 @@ fn main() {
     println!("Numbers: {:?}", nums);
 
     println!("Generating frontside fortune...");
-    convert_svg_to_pdf(
-        "data/fortune_template/omikuji_frontside_template.svg",
-        "data/fortune_output/omikuji_frontside.pdf",
-    );
+    // svg_to_pdf(
+    //     "data/fortune_template/omikuji_frontside_template.svg",
+    //     "data/fortune_output/omikuji_frontside.pdf",
+    // );
 
-    println!("Generating backside fortune...");
-    convert_svg_to_pdf(
-        "data/fortune_template/omikuji_backside_1.svg",
-        "data/fortune_output/omikuji_backside.pdf",
-    );
+    // println!("Generating backside fortune...");
+    // svg_to_pdf(
+    //     "data/fortune_template/omikuji_backside_1.svg",
+    //     "data/fortune_output/omikuji_backside.pdf",
+    // );
 
     merge_pdf(
         [

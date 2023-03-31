@@ -25,4 +25,4 @@ luck_categories:
 
 templates:
   front: fortune_template/omikuji_frontside_template.svg
-  back: fortune_template/omikuji_backside_1.svg
+  back: fortune_template/omikuji_backside_long.svg

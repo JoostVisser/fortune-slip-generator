@@ -1,6 +1,9 @@
 use std::{path::Path, collections::BTreeMap};
 use lopdf::{Bookmark, Document, Object, ObjectId};
 
+
+/// This code was copy-pasted from the lopdf crate.
+/// Sadly, there's no high-level crate for PDF manipulation yet.
 pub fn merge_pdf<P: AsRef<Path>>(input_paths: impl IntoIterator<Item = P>, output_path: P) -> Result<(), String> {
 
     // Load all PDF files
