@@ -42,7 +42,7 @@ impl SvgEditor {
         Self::get_matching_elems(&self.svg_root, name)
     }
 
-    fn get_matching_elems<'a>(element: &'a Element, name: &str) -> Vec<Element> {
+    fn get_matching_elems(element: &Element, name: &str) -> Vec<Element> {
         let mut mut_elems = vec![];
 
         for child_elem in element.children() {
@@ -167,7 +167,6 @@ mod tests {
 
     const SVG_EXAMPLE_CIRCLE: &str = r#"<svg height="100" width="100">
         <circle cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill="red" />
-        Sorry, your browser does not support inline SVG.
     </svg> "#;
 
     #[test]
@@ -187,6 +186,6 @@ mod tests {
 
         let pdf_path = temp_file.dir.path().join("test1.pdf");
         svg_editor.save_to_pdf(&pdf_path).unwrap();
-        assert!(pdf_path.exists())
+        assert!(pdf_path.exists());
     }
 }

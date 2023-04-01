@@ -1,6 +1,6 @@
 use anyhow::Result;
 use serde::{Serialize, Deserialize};
-use std::{error::Error, fs, collections::HashMap};
+use std::{fs, collections::HashMap};
 
 #[derive(Serialize, Deserialize, Debug)]
 struct Fortune {
