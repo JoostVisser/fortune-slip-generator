@@ -26,11 +26,11 @@ pub fn svg_to_pdf(path_to_svg: impl AsRef<Path>, output_path: impl AsRef<Path>) 
     if status.success() {
         Ok(())
     } else {
-        anyhow::bail!(
+        Err(anyhow::anyhow!(
             "Failed to convert {} to {}",
             path_to_svg.as_ref().to_str().unwrap(),
             output_path.as_ref().to_str().unwrap()
-        )
+        ))
     }
 }
 

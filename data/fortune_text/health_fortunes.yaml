@@ -1,5 +1,5 @@
 ---
-fortune_type: Health
+fortune_key: health
 fortunes:
   great_luck:
     - Your body will not fail you in the moment of truth.

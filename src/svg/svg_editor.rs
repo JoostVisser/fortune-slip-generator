@@ -1,115 +1,47 @@
-use std::{
-    fs::File,
-    io::{BufReader, BufWriter},
-    path::Path,
-};
-
-use anyhow::Result;
-use minidom::{
-    element::{Attrs, Texts},
-    Element,
-};
-use tempfile::TempDir;
+use self::{text_elem::TextElem, xml_elem_utils::ElemUtils, xml_tree_wrapper::XmlTreeWrapper};
 
 use super::svg_to_pdf;
+use anyhow::Result;
+use std::path::Path;
+use tempfile::TempDir;
+use xmltree::Element;
 
-#[derive(Debug, PartialEq)]
+pub mod text_elem;
+mod xml_elem_utils;
+mod xml_tree_wrapper;
+
+#[derive(Debug, PartialEq, Eq, Clone)]
 pub struct SvgEditor {
-    pub svg_root: Element,
+    xml_tree: XmlTreeWrapper,
+    text_elems: Vec<TextElem>,
+    xml_elems: Vec<Element>,
 }
 
 impl SvgEditor {
     pub fn open<P: AsRef<Path>>(svg_file_path: P) -> Result<SvgEditor> {
-        let svg_root = Self::read_svg(svg_file_path)?;
+        let xml_tree = XmlTreeWrapper::open(svg_file_path)?;
+        let xml_elems = xml_tree.get_elems_with_tag("text");
+        let text_elems = xml_elems
+            .iter()
+            .map(|x| TextElem::try_from(x))
+            .collect::<Result<_>>()?;
 
-        let svg_editor = SvgEditor { svg_root };
-
-        Ok(svg_editor)
+        Ok(SvgEditor {
+            xml_tree,
+            text_elems,
+            xml_elems,
+        })
     }
 
-    fn read_svg<P: AsRef<Path>>(svg_file_path: P) -> Result<Element> {
-        let file = File::open(svg_file_path.as_ref())?;
-        let reader = BufReader::new(file);
-        Element::from_reader_with_prefixes(reader, "http://www.w3.org/2000/svg".to_string())
-            .map_err(|x| anyhow::anyhow!("Could not parse the SVG due to {x}"))
+    pub fn get_text_elems(&self) -> Vec<&TextElem> {
+        return self.text_elems.iter().collect();
     }
 
-    /// Returns all elements whose name matches given name.
-    ///
-    /// The name of an XML element is the text inside a tag.
-    /// For example `<hello>Some Text</hello>` returns "hello"
-    pub fn get_elems_with_name(&self, name: &str) -> Vec<Element> {
-        Self::get_matching_elems(&self.svg_root, name)
+    pub fn get_text_elems_mut(&mut self) -> Vec<&mut TextElem> {
+        return self.text_elems.iter_mut().collect();
     }
 
-    fn get_matching_elems(element: &Element, name: &str) -> Vec<Element> {
-        let mut mut_elems = vec![];
-
-        for child_elem in element.children() {
-            mut_elems.extend(Self::get_matching_elems(child_elem, name))
-        }
-
-        if element.name() == name {
-            mut_elems.push(element.clone());
-        }
-
-        mut_elems
-    }
-
-    /// Replace an element for a new element.
-    /// This is the main way of interacting with the SVG editor.
-    pub fn replace_elem(&mut self, old_elem: &Element, new_elem: &Element) -> Result<()> {
-        let found_elem = Self::find_matching_elem(&mut self.svg_root, old_elem)?;
-        Self::update_single_element(found_elem, new_elem);
-        Ok(())
-    }
-
-    fn find_matching_elem<'a>(
-        element: &'a mut Element,
-        old_elem: &Element,
-    ) -> Result<&'a mut Element> {
-        if element == old_elem {
-            return Ok(element);
-        }
-
-        for child_elem in element.children_mut() {
-            let matching_elem = Self::find_matching_elem(child_elem, old_elem);
-
-            if let Ok(elem) = matching_elem {
-                return Ok(elem);
-            }
-        }
-
-        anyhow::bail!("No matching element found")
-    }
-
-    fn update_single_element(element: &mut Element, new_elem: &Element) {
-        Self::update_attrs(element, new_elem.attrs());
-        Self::update_text(element, new_elem.texts());
-    }
-
-    fn update_attrs(element: &mut Element, new_attrs: Attrs) {
-        for (key, value) in new_attrs {
-            element.set_attr(key, value)
-        }
-    }
-
-    fn update_text(element: &mut Element, new_texts: Texts) {
-        // Note: If new_texts is larger than the text of the element, it won't append it.
-        for (old_text, new_text) in element.texts_mut().zip(new_texts) {
-            *old_text = new_text.to_string();
-        }
-    }
-
-    pub fn save_to_svg<P: AsRef<Path>>(&self, svg_path: P) -> Result<()> {
-        let file = File::create(svg_path)?;
-        let mut writer = BufWriter::new(file);
-        self.svg_root.write_to(&mut writer)?;
-
-        Ok(())
-    }
-
-    pub fn save_to_pdf<P: AsRef<Path>>(&self, pdf_path: P) -> Result<()> {
+    pub fn save_to_pdf<P: AsRef<Path>>(&mut self, pdf_path: P) -> Result<()> {
         let temp_dir = TempDir::new()?;
         let temp_svg_path = temp_dir.path().join("temp.svg");
 
@@ -118,74 +50,110 @@ impl SvgEditor {
 
         Ok(())
     }
+
+    pub fn save_to_svg<P: AsRef<Path>>(&mut self, svg_path: P) -> Result<()> {
+        self.save_elem_changes()?;
+        self.xml_tree.save(svg_path)?;
+        Ok(())
+    }
+
+    fn save_elem_changes(&mut self) -> Result<()> {
+        for (text_elem, xml_elem) in self.text_elems.iter().zip(&self.xml_elems) {
+            let new_xml_elem = Self::clone_new_xml_elem(&text_elem, &xml_elem)?;
+            self.xml_tree.replace_elem(xml_elem, new_xml_elem)?;
+        }
+
+        Ok(())
+    }
+
+    fn clone_new_xml_elem(text_elem: &TextElem, xml_elem: &Element) -> Result<Element> {
+        let mut new_xml_elem = xml_elem.clone();
+        new_xml_elem.attributes = text_elem.attr.clone();
+        new_xml_elem.set_inner_text(&text_elem.text)?;
+        Ok(new_xml_elem)
+    }
 }
 
 #[cfg(test)]
 mod tests {
 
+    use std::path::PathBuf;
+
     use super::*;
+    use rstest::{fixture, rstest};
     use test_utils;
 
-    const SVG_EXAMPLE: &str = r#"<svg height='100' width='100' xmlns="svg">
-                                <tspan x='12' y='24'>Cat</tspan>
-                               </svg>"#;
+    const SVG_EXAMPLE: &str = r#"
+        <svg height='100' width='120'>
+            <text fill="black" font-size="24">
+                <tspan x='12' y='24'>Mine turtle!</tspan>
+            </text>
+        </svg>"#;
 
-    #[test]
-    fn test_get_elems() {
+    #[fixture]
+    fn svg_editor() -> SvgEditor {
         let temp_file = test_utils::create_temp_file("temp.svg", SVG_EXAMPLE);
-        let svg_editor = SvgEditor::open(&temp_file.path).unwrap();
-
-        let tspan_elems = svg_editor.get_elems_with_name("tspan");
-
-        assert_eq!(tspan_elems.len(), 1);
-
-        let tspan_elem = &tspan_elems[0];
-        assert_eq!(tspan_elem.name(), "tspan");
-        assert_eq!(tspan_elem.attr("x").unwrap(), "12");
-        assert_eq!(tspan_elem.attr("y").unwrap(), "24");
-        assert_eq!(tspan_elem.text(), "Cat");
+        SvgEditor::open(&temp_file.path).unwrap()
     }
 
-    #[test]
-    fn test_replace_elem() {
-        let temp_file = test_utils::create_temp_file("temp.svg", SVG_EXAMPLE);
-        let mut svg_editor = SvgEditor::open(&temp_file.path).unwrap();
+    #[rstest]
+    fn test_get_text_elems(svg_editor: SvgEditor) {
+        let text_elems = svg_editor.get_text_elems();
 
-        let tspan_elem = &svg_editor.get_elems_with_name("tspan")[0];
-        let mut new_tspan_elem = tspan_elem.clone();
-        new_tspan_elem.set_attr("x", 69);
-        svg_editor
-            .replace_elem(&tspan_elem, &new_tspan_elem)
-            .unwrap();
+        assert_eq!(text_elems.len(), 1);
 
-        let tspan_elem = &svg_editor.get_elems_with_name("tspan")[0];
-        assert_eq!(tspan_elem.name(), "tspan");
-        assert_eq!(tspan_elem.attr("x").unwrap(), "69");
-        assert_eq!(tspan_elem.attr("y").unwrap(), "24");
-        assert_eq!(tspan_elem.text(), "Cat");
+        let text_elem = text_elems.first().unwrap();
+
+        assert_eq!(text_elem.attr["fill"], "black");
+        assert_eq!(text_elem.attr["font-size"], "24");
+        assert_eq!(text_elem.text, "Mine turtle!");
     }
 
-    const SVG_EXAMPLE_CIRCLE: &str = r#"<svg height="100" width="100">
-        <circle cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill="red" />
-    </svg> "#;
+    #[rstest]
+    fn test_get_text_elems_mut(mut svg_editor: SvgEditor) {
+        let mut text_elems = svg_editor.get_text_elems_mut();
 
-    #[test]
-    fn test_save_svg() {
-        let temp_file = test_utils::create_temp_file("temp.svg", SVG_EXAMPLE_CIRCLE);
-        let svg_editor = SvgEditor::open(&temp_file.path).unwrap();
+        let text_elem = text_elems.first_mut().unwrap();
+        assert_eq!(text_elem.attr["fill"], "black");
 
-        let svg_path = temp_file.dir.path().join("test1.svg");
-        svg_editor.save_to_svg(&svg_path).unwrap();
+        text_elem.attr.insert("fill".to_string(), "red".to_string());
+        assert_eq!(text_elem.attr["fill"], "red");
+    }
+
+    #[rstest]
+    fn test_save_to_pdf(mut svg_editor: SvgEditor) {
+        let temp_dir = TempDir::new().unwrap();
+        let pdf_path = temp_dir.path().join("temp.pdf");
+
+        svg_editor.save_to_pdf(&pdf_path).unwrap();
+        assert!(pdf_path.exists());
+    }
+
+    #[rstest]
+    fn test_save_to_svg(mut svg_editor: SvgEditor) {
+        let (_dir, svg_path) = create_file_and_save(&mut svg_editor);
         assert!(svg_path.exists());
     }
 
-    #[test]
-    fn test_save_pdf() {
-        let temp_file = test_utils::create_temp_file("temp.svg", SVG_EXAMPLE_CIRCLE);
-        let svg_editor = SvgEditor::open(&temp_file.path).unwrap();
+    fn create_file_and_save(svg_editor: &mut SvgEditor) -> (TempDir, PathBuf) {
+        let temp_dir = TempDir::new().unwrap();
+        let svg_path = temp_dir.path().join("temp2.svg");
+        svg_editor.save_to_svg(&svg_path).unwrap();
+        (temp_dir, svg_path)
+    }
 
-        let pdf_path = temp_file.dir.path().join("test1.pdf");
-        svg_editor.save_to_pdf(&pdf_path).unwrap();
-        assert!(pdf_path.exists());
+    #[rstest]
+    fn test_save_to_svg_with_changes(mut svg_editor: SvgEditor) {
+        let mut text_elems = svg_editor.get_text_elems_mut();
+        let text_elem = text_elems.first_mut().unwrap();
+        assert_eq!(text_elem.attr["fill"], "black");
+        text_elem.attr.insert("fill".to_string(), "red".to_string());
+
+        let (_dir, path) = create_file_and_save(&mut svg_editor);
+
+        let new_svg_editor = SvgEditor::open(&path).unwrap();
+        let new_text_elems = new_svg_editor.get_text_elems();
+        let new_text_elem = new_text_elems.first().unwrap();
+        assert_eq!(new_text_elem.attr["fill"], "red");
     }
 }
