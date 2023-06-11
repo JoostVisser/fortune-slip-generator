@@ -23,6 +23,7 @@ jobs:
         os:
           - ubuntu-latest
           - windows-latest
+      fail-fast: false
     steps:
       - uses: actions/checkout@v3
       - uses: dtolnay/rust-toolchain@stable
@@ -30,9 +31,11 @@ jobs:
         with:
           # Matrix instances (other than OS) need to be added to this explicitly
           key: ${{ matrix.rust-version }}
-      - uses: ./.github/actions/install_inkscape
+      - uses: .github/actions/install_inkscape
+      - name: Install nextest
+        uses: taiki-e/install-action@nextest
       - name: Run tests
-        run: cargo test --all --verbose
+        run: cargo nextest run --no-fail-fast --failure-output immediate-final
 
   fmt:
     name: Style checker
