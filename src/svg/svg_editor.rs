@@ -99,7 +99,7 @@ mod tests {
 
     use super::*;
     use rstest::{fixture, rstest};
-    use tempfile::{TempDir, tempdir};
+    use tempfile::{tempdir, TempDir};
     use test_utils;
 
     const SVG_EXAMPLE: &str = r#"

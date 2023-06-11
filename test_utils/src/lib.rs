@@ -3,7 +3,7 @@ use std::{
     path::{Path, PathBuf},
 };
 
-use tempfile::{TempDir, tempdir};
+use tempfile::{tempdir, TempDir};
 
 pub struct TempFile {
     pub dir: TempDir,

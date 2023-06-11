@@ -4,7 +4,7 @@ use std::{
 };
 
 use anyhow::{anyhow, Ok, Result};
-use log::debug;
+use log::{debug, info};
 
 pub fn svg_to_pdf(path_to_svg: impl AsRef<Path>, output_path: impl AsRef<Path>) -> Result<()> {
     let output_path_str = output_path
@@ -16,6 +16,15 @@ pub fn svg_to_pdf(path_to_svg: impl AsRef<Path>, output_path: impl AsRef<Path>) 
         .to_str()
         .ok_or(anyhow!("Input path is not valid unicode"))?;
 
+    info!("Converting {} to {}", path_to_svg_str, output_path_str);
+
+    let parent_path = path_to_svg.as_ref().parent().unwrap();
+    let parent_files = parent_path.read_dir().unwrap();
+    for file in parent_files {
+        let file = file.unwrap();
+        let file_name = file.file_name();
+        info!("File name: {:?}", file_name);
+    }
     let status = execute_inkscape_command(path_to_svg_str, output_path_str)?;
 
     if status.success() {
@@ -58,6 +67,8 @@ fn execute_inkscape_command(
 
 #[cfg(test)]
 mod tests {
+    use std::process::Command;
+
     use super::svg_to_pdf;
     const SVG_EXAMPLE: &str = "<svg height='100' width='100'>
                                  <circle cx='50' cy='50' r='40' />
@@ -71,5 +82,29 @@ mod tests {
         assert!(!temp_pdf_path.exists());
         svg_to_pdf(&temp_file.path, &temp_pdf_path).unwrap();
         assert!(temp_pdf_path.exists());
+    }
+
+    #[test]
+    fn test_execute_inkscape_command() {
+        let temp_file = test_utils::create_temp_file("temp.svg", SVG_EXAMPLE);
+        let temp_pdf_path = temp_file.dir.path().join("temp.pdf");
+
+        let status = super::execute_inkscape_command(
+            temp_file.path.to_str().unwrap(),
+            temp_pdf_path.to_str().unwrap(),
+        )
+        .unwrap();
+
+        assert!(status.success());
+    }
+
+    #[test]
+    fn simple_inkscape_test() {
+        let result = Command::new("inkscape")
+            .arg("--help")
+            .status()
+            .expect("Failed to execute process");
+
+        assert!(result.success());
     }
 }
