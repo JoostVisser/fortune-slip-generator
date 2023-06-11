@@ -4,7 +4,7 @@ use anyhow::{bail, Result};
 use itertools::intersperse;
 use log::debug;
 use rayon::prelude::*;
-use tempfile::TempDir;
+use tempfile::tempdir;
 
 use crate::{
     constants::NR_SLIPS_PER_PAGE,
@@ -47,7 +47,7 @@ impl FortuneGenerator {
 
         let fortunes = self.get_random_fortunes()?;
 
-        let temp_dir = TempDir::new()?;
+        let temp_dir = tempdir()?;
 
         let front_pdf_paths = self.generate_pdf_fortunes(temp_dir.path(), fortunes)?;
         let backside_pdf_path = self.generate_backside_pdf(temp_dir.path())?;
@@ -158,6 +158,7 @@ mod tests {
     use lopdf::Document;
     use pretty_assertions::assert_eq;
     use rstest::{fixture, rstest};
+    use tempfile::tempdir;
 
     use crate::{fortune::FortuneGenerator, svg::svg_file::SvgFile};
 
@@ -178,7 +179,7 @@ mod tests {
 
     #[rstest]
     fn test_generate_to_pdf(fortune_generator: FortuneGenerator) -> Result<()> {
-        let temp_dir = tempfile::tempdir()?;
+        let temp_dir = tempdir()?;
         let pdf_path = temp_dir.path().join("fortunes.pdf");
         fortune_generator.generate_to_pdf(&pdf_path)?;
 

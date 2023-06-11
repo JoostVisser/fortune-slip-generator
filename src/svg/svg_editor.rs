@@ -99,7 +99,7 @@ mod tests {
 
     use super::*;
     use rstest::{fixture, rstest};
-    use tempfile::TempDir;
+    use tempfile::{TempDir, tempdir};
     use test_utils;
 
     const SVG_EXAMPLE: &str = r#"
@@ -150,7 +150,7 @@ mod tests {
     }
 
     fn create_file_and_save(svg_editor: &mut SvgEditor) -> (TempDir, PathBuf) {
-        let temp_dir = TempDir::new().unwrap();
+        let temp_dir = tempdir().unwrap();
         let svg_path = temp_dir.path().join("temp2.svg");
         svg_editor.save_to_svg(&svg_path).unwrap();
         (temp_dir, svg_path)

@@ -35,7 +35,7 @@ jobs:
       - name: Install nextest
         uses: taiki-e/install-action@nextest
       - name: Run tests
-        run: cargo nextest run --no-fail-fast --failure-output immediate-final
+        run: cargo nextest run --no-fail-fast --verbose
 
   fmt:
     name: Style checker
