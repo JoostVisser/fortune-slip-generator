@@ -1,0 +1,12 @@
+
+name: 'Install Inkscape'
+runs:
+  using: "composite"
+  steps:
+  - if: runner.os == 'Windows'
+    run: choco install inkscape
+  - if: runner.os == 'Linux'
+    uses: awalsh128/cache-apt-pkgs-action@latest
+      with:
+        packages: inkscape
+        version: 1.0
