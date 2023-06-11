@@ -45,13 +45,18 @@ fn execute_inkscape_command(
     println!("Input file path: {}", path_to_svg);
     println!("Export file name: {}", output_path);
 
-    let result = Command::new("inkscape")
+    let mut command = Command::new("inkscape");
+    let temp = command
         .arg("--export-area-drawing")
         .arg("--export-text-to-path")
         .arg("--batch-process")
         .arg("--export-type=pdf")
         .arg(format!("--export-filename={output_path}"))
-        .arg(path_to_svg)
+        .arg(path_to_svg);
+
+    println!("Args: {:?}", temp.get_args().collect::<Vec<_>>());
+
+    let result = temp
         .stdout(Stdio::piped())
         .stderr(Stdio::piped())
         .spawn()?
