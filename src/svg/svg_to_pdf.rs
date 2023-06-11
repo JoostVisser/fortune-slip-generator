@@ -48,7 +48,6 @@ fn execute_inkscape_command(
     let temp = command
         .arg("--export-area-drawing")
         .arg("--export-text-to-path")
-        .arg("--batch-process")
         .arg("--export-type=pdf")
         .arg(format!("--export-filename={output_path}"))
         .arg(path_to_svg);
