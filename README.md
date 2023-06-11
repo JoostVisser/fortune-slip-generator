@@ -2,6 +2,8 @@
 
 > :construction: The project is still under development. :construction:
 
+[![Rust CI](https://github.com/JoostVisser/fortune-slip-generator/actions/workflows/rust_ci_flow.yml/badge.svg)](https://github.com/JoostVisser/fortune-slip-generator/actions/workflows/rust_ci_flow.yml)
+
 With the Fortune Slip Generator, you can create your very own Fortune Slips!
 
 A sample fortune slip looks like this:
