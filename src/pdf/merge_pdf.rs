@@ -1,19 +1,22 @@
-use std::{path::Path, collections::BTreeMap};
+use anyhow::{anyhow, bail, Context, Result};
 use lopdf::{Bookmark, Document, Object, ObjectId};
-
+use std::{collections::BTreeMap, path::Path};
 
 /// This code was copy-pasted from the lopdf crate.
 /// Sadly, there's no high-level crate for PDF manipulation yet.
-pub fn merge_pdf<P: AsRef<Path>>(input_paths: impl IntoIterator<Item = P>, output_path: P) -> Result<(), String> {
+pub fn merge_pdf(input_paths: &[impl AsRef<Path>], output_path: impl AsRef<Path>) -> Result<()> {
+    for input_path in input_paths {
+        if !input_path.as_ref().is_file() {
+            bail!("The path to the input PDF file is not a file");
+        }
+    }
 
     // Load all PDF files
-    let documents = input_paths.into_iter().map(|path| {
-        if ! path.as_ref().is_file() {
-            return Err("File not found".to_string());
-        }
-        let doc = Document::load(path).unwrap();
-        Ok(doc)
-    }).collect::<Result<Vec<Document>, String>>()?;
+    let documents = input_paths
+        .iter()
+        .map(Document::load)
+        .map(|x| x.map_err(|e| anyhow!(e)))
+        .collect::<Result<Vec<_>>>()?;
 
     // Define a starting max_id (will be used as start index for object_ids)
     let mut max_id = 1;
@@ -182,7 +185,54 @@ pub fn merge_pdf<P: AsRef<Path>>(input_paths: impl IntoIterator<Item = P>, outpu
     document.compress();
 
     // Save the merged PDF
-    document.save(output_path).unwrap();
+    document
+        .save(&output_path)
+        .with_context(|| format!("Cannot save to {:?}", &output_path.as_ref()))?;
 
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use lopdf::Document;
+    use std::{fs::File, io::Write, path::PathBuf};
+    use tempfile::tempdir;
+
+    use crate::pdf::merge_pdf::merge_pdf;
+
+    #[test]
+    fn test_merge_pdf() {
+        let tempdir = tempdir().unwrap();
+        let input_path1 = PathBuf::from("test_utils/data/pdf_samples/dummy1.pdf");
+        let input_path2 = PathBuf::from("test_utils/data/pdf_samples/dummy2.pdf");
+        let output_path = tempdir.path().join("output.pdf");
+
+        merge_pdf(&[&input_path1, &input_path2], &output_path).unwrap();
+
+        let pdf = Document::load(&output_path).unwrap();
+        let pages = pdf.get_pages();
+        assert_eq!(pages.len(), 2);
+    }
+
+    #[test]
+    fn test_merge_pdf_invalid_input_path() {
+        // Create a temporary directory
+        let tempdir = tempdir().unwrap();
+
+        // Create a temporary input file that is not a PDF file
+        let input_path = tempdir.path().join("input.txt");
+        File::create(&input_path)
+            .unwrap()
+            .write_all(b"Hello, world!")
+            .unwrap();
+
+        // Merge the input files
+        let result = merge_pdf(
+            &[&input_path, &input_path],
+            &tempdir.path().join("output.pdf"),
+        );
+
+        // Verify that the merge operation failed with an error message
+        assert!(result.is_err());
+    }
 }

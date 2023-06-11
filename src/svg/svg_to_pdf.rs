@@ -1,37 +1,59 @@
-use std::{path::Path, process::Command};
+use std::{
+    path::Path,
+    process::{Command, Stdio},
+};
 
-use anyhow::{Ok, Result};
+use anyhow::{anyhow, Ok, Result};
+use log::debug;
 
 pub fn svg_to_pdf(path_to_svg: impl AsRef<Path>, output_path: impl AsRef<Path>) -> Result<()> {
-    let status = Command::new("inkscape")
-        .arg("--export-area-drawing")
-        .arg("--export-text-to-path")
-        .arg("--batch-process")
-        .arg("--export-type=pdf")
-        .arg(format!(
-            "--export-filename={}",
-            output_path.as_ref().to_str().unwrap()
-        ))
-        .arg(path_to_svg.as_ref().to_str().unwrap())
-        .status()
-        .expect(
-            format!(
-                "Failed to convert {} to {}",
-                path_to_svg.as_ref().to_str().unwrap(),
-                output_path.as_ref().to_str().unwrap()
-            )
-            .as_str(),
-        );
+    let output_path_str = output_path
+        .as_ref()
+        .to_str()
+        .ok_or(anyhow!("Output path is not valid unicode"))?;
+    let path_to_svg_str = path_to_svg
+        .as_ref()
+        .to_str()
+        .ok_or(anyhow!("Input path is not valid unicode"))?;
+
+    let status = execute_inkscape_command(path_to_svg_str, output_path_str)?;
 
     if status.success() {
         Ok(())
     } else {
-        Err(anyhow::anyhow!(
+        Err(anyhow!(
             "Failed to convert {} to {}",
             path_to_svg.as_ref().to_str().unwrap(),
             output_path.as_ref().to_str().unwrap()
         ))
     }
+}
+
+fn execute_inkscape_command(
+    path_to_svg: &str,
+    output_path: &str,
+) -> Result<std::process::ExitStatus> {
+    let result = Command::new("inkscape")
+        .arg("--export-area-drawing")
+        .arg("--export-text-to-path")
+        .arg("--batch-process")
+        .arg("--export-type=pdf")
+        .arg(format!("--export-filename={output_path}"))
+        .arg(path_to_svg)
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped())
+        .spawn()?
+        .wait_with_output()?;
+
+    debug!(
+        "Inkscape output
+         StdOut: {}
+         StdErr: {}",
+        String::from_utf8_lossy(&result.stdout),
+        String::from_utf8_lossy(&result.stderr)
+    );
+
+    Ok(result.status)
 }
 
 #[cfg(test)]

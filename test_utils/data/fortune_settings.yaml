@@ -8,8 +8,9 @@ luck_levels:
     eng: Bad Luck
 
 fortune_content_files:
+  - fortune_text/general_fortunes.yaml
   - fortune_text/health_fortunes.yaml
   - fortune_text/love_fortunes.yaml
 
-template_front: fortune_template/omikuji_frontside_template.svg
+template_front: fortune_template/omikuji_frontside_test.svg
 template_back: fortune_template/omikuji_backside_long.svg

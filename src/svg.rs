@@ -1,2 +1,3 @@
 pub mod svg_editor;
-pub mod svg_to_pdf;
+mod svg_to_pdf;
+pub mod svg_file;

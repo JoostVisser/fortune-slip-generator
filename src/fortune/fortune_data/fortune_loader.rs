@@ -26,15 +26,9 @@ struct FortuneTextDataFromFile {
 }
 
 pub fn load_fortune_data(path: impl AsRef<Path>) -> Result<FortuneDataInner> {
-    let fortune_settings = load_fortune_settings(&path)?;
+    let fortune_settings = load_fortune_settings_with_updated_path(&path)?;
 
-    let parent_path = path
-        .as_ref()
-        .parent()
-        .ok_or(anyhow!("Could not find the parent of {:?}", path.as_ref()))?;
-
-    let fortunes_per_category =
-        load_fortune_contents(parent_path, &fortune_settings.fortune_content_files)?;
+    let fortunes_per_category = load_fortune_contents(&fortune_settings.fortune_content_files)?;
 
     let fortune_data = FortuneDataInner {
         settings: fortune_settings,
@@ -46,32 +40,13 @@ pub fn load_fortune_data(path: impl AsRef<Path>) -> Result<FortuneDataInner> {
     Ok(fortune_data)
 }
 
-fn load_fortune_settings(path: impl AsRef<Path>) -> Result<FortuneSettings> {
-    let reader = open_file_with_context(path)?;
-    Ok(serde_yaml::from_reader(reader)?)
-}
+fn load_fortune_settings_with_updated_path(path: impl AsRef<Path>) -> Result<FortuneSettings> {
+    let reader = open_file_with_context(path.as_ref())?;
+    let mut fortune_settings: FortuneSettings = serde_yaml::from_reader(reader)?;
 
-fn load_fortune_contents(
-    parent_path: impl AsRef<Path>,
-    rel_fortune_paths: &[impl AsRef<Path>],
-) -> Result<FortunesPerCategory> {
-    rel_fortune_paths
-        .iter()
-        .map(|f_path| {
-            let abs_fortune_path = parent_path.as_ref().join(f_path);
-            open_and_flatten(abs_fortune_path)
-        })
-        .collect()
-}
+    update_settings_paths(path.as_ref(), &mut fortune_settings)?;
 
-fn open_and_flatten(abs_fortune_path: impl AsRef<Path>) -> Result<(String, LuckToFortunes)> {
-    let content = open_content(abs_fortune_path)?;
-    Ok((content.category, content.fortunes))
-}
-
-fn open_content(fortune_path: impl AsRef<Path>) -> Result<FortuneTextDataFromFile> {
-    let reader = open_file_with_context(fortune_path)?;
-    Ok(serde_yaml::from_reader(reader)?)
+    Ok(fortune_settings)
 }
 
 fn open_file_with_context(path: impl AsRef<Path>) -> Result<BufReader<File>> {
@@ -79,6 +54,33 @@ fn open_file_with_context(path: impl AsRef<Path>) -> Result<BufReader<File>> {
         .with_context(|| format!("Could not read from file at {:?}", path.as_ref()))?;
 
     Ok(BufReader::new(file))
+}
+
+fn update_settings_paths(
+    path: impl AsRef<Path>,
+    fortune_settings: &mut FortuneSettings,
+) -> Result<()> {
+    let parent_path = path
+        .as_ref()
+        .parent()
+        .ok_or(anyhow!("Could not find the parent of {:?}", path.as_ref()))?;
+
+    for path in &mut fortune_settings.fortune_content_files {
+        *path = parent_path.join(&path);
+    }
+    fortune_settings.template_back = parent_path.join(&fortune_settings.template_back);
+    fortune_settings.template_front = parent_path.join(&fortune_settings.template_front);
+    Ok(())
+}
+
+fn load_fortune_contents(fortune_paths: &[impl AsRef<Path>]) -> Result<FortunesPerCategory> {
+    fortune_paths.iter().map(open_and_flatten).collect()
+}
+
+fn open_and_flatten(fortune_path: impl AsRef<Path>) -> Result<(String, LuckToFortunes)> {
+    let reader = open_file_with_context(fortune_path)?;
+    let content: FortuneTextDataFromFile = serde_yaml::from_reader(reader)?;
+    Ok((content.category, content.fortunes))
 }
 
 fn error_check(fortune_data: &FortuneDataInner) -> Result<()> {
@@ -124,17 +126,20 @@ fn check_unique_keys_categories(fortune_data: &FortuneDataInner) -> Result<()> {
 
 #[cfg(test)]
 mod tests {
-    use std::{collections::HashMap, path::PathBuf};
+    use std::path::PathBuf;
 
     use anyhow::Result;
+    use maplit::hashmap;
+    use pretty_assertions::assert_eq;
 
     use crate::fortune::fortune_data::fortune_settings::{FortuneSettings, LuckLevelInfo};
 
-    use super::{load_fortune_data, load_fortune_settings};
+    use super::{load_fortune_data, load_fortune_settings_with_updated_path};
 
     #[test]
-    fn test_load_fortune_settings() -> Result<()> {
-        let fortune_settings = load_fortune_settings("test_utils/data/fortune_settings.yaml")?;
+    fn test_load_fortune_settings_with_updated_path() -> Result<()> {
+        let fortune_settings: FortuneSettings =
+            load_fortune_settings_with_updated_path("test_utils/data/fortune_settings.yaml")?;
 
         let expected_settings = get_test_settings();
 
@@ -144,28 +149,26 @@ mod tests {
     }
 
     fn get_test_settings() -> FortuneSettings {
-        let mut luck_levels = HashMap::new();
-        luck_levels.insert(
-            "good_luck".to_string(),
-            LuckLevelInfo {
+        let luck_levels = hashmap! {
+            "good_luck".to_string() => LuckLevelInfo {
                 jap: "中吉".to_string(),
                 eng: "Good Luck".to_string(),
             },
-        );
-        luck_levels.insert(
-            "bad_luck".to_string(),
-            LuckLevelInfo {
+            "bad_luck".to_string() => LuckLevelInfo {
                 jap: "凶".to_string(),
                 eng: "Bad Luck".to_string(),
             },
-        );
+        };
 
-        let template_front = PathBuf::from("fortune_template/omikuji_frontside_template.svg");
-        let template_back = PathBuf::from("fortune_template/omikuji_backside_long.svg");
+        let template_front =
+            PathBuf::from("test_utils/data/fortune_template/omikuji_frontside_test.svg");
+        let template_back =
+            PathBuf::from("test_utils/data/fortune_template/omikuji_backside_long.svg");
 
         let fortune_content_files = vec![
-            PathBuf::from("fortune_text/health_fortunes.yaml"),
-            PathBuf::from("fortune_text/love_fortunes.yaml"),
+            PathBuf::from("test_utils/data/fortune_text/general_fortunes.yaml"),
+            PathBuf::from("test_utils/data/fortune_text/health_fortunes.yaml"),
+            PathBuf::from("test_utils/data/fortune_text/love_fortunes.yaml"),
         ];
 
         FortuneSettings {

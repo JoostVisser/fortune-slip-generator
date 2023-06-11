@@ -4,7 +4,7 @@ use anyhow::Result;
 
 use self::{
     fortune_loader::FortuneDataInner,
-    fortune_settings::{FortuneSettings},
+    fortune_settings::FortuneSettings,
 };
 
 mod fortune_loader;
@@ -17,7 +17,7 @@ pub struct FortuneData {
 
 impl FortuneData {
     pub fn open(path: impl AsRef<Path>) -> Result<Self> {
-        let fortune_data_inner = fortune_loader::load_fortune_data(path)?;
+        let fortune_data_inner: FortuneDataInner = fortune_loader::load_fortune_data(path)?;
 
         Ok(FortuneData { fortune_data_inner })
     }
@@ -52,4 +52,5 @@ impl FortuneData {
             .keys()
             .collect()
     }
+
 }

@@ -1,42 +1,21 @@
-#![warn(clippy::all, clippy::pedantic)]
-use crate::{pdf::merge_pdf::merge_pdf, fortune::FortuneGenerator};
-use rand::{seq::SliceRandom, thread_rng};
+use log::info;
 
-pub mod pdf;
-pub mod svg;
+use crate::fortune::FortuneGenerator;
+
 pub mod fortune;
 
+mod constants;
+mod pdf;
+mod svg;
+
 fn main() {
-    let mut nums = [1, 2, 3, 4, 5];
-    let mut rng = thread_rng();
+    pretty_env_logger::init();
 
-    nums.shuffle(&mut rng);
+    let fortune_settings = "data/fortune_data/settings.yaml";
+    info!("Loading data from '{}'", fortune_settings);
+    let a = FortuneGenerator::open(fortune_settings).unwrap();
 
-    println!("Numbers: {:?}", nums);
-
-    println!("Generating frontside fortune...");
-    // svg_to_pdf(
-    //     "data/fortune_template/omikuji_frontside_template.svg",
-    //     "data/fortune_output/omikuji_frontside.pdf",
-    // );
-
-    // println!("Generating backside fortune...");
-    // svg_to_pdf(
-    //     "data/fortune_template/omikuji_backside_1.svg",
-    //     "data/fortune_output/omikuji_backside.pdf",
-    // );
-
-    let a = FortuneGenerator::open("data/fortune_settings").unwrap();
-    a.generate_fortunes().unwrap();
-
-    merge_pdf(
-        [
-            "data/fortune_output/omikuji_frontside.pdf",
-            "data/fortune_output/omikuji_backside.pdf",
-            "data/fortune_output/omikuji_frontside.pdf",
-            "data/fortune_output/omikuji_backside.pdf",
-        ],
-        "data/fortune_output/omikuji_merged.pdf",
-    )
-    .expect("Could not convert to pdf");
+    let output_pdf_path = "test.pdf";
+    info!("Generating fortune slips to '{}'...", output_pdf_path);
+    a.generate_to_pdf("test.pdf").unwrap();
 }

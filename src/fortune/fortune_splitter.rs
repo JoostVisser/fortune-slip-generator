@@ -3,27 +3,24 @@ use std::collections::HashMap;
 use anyhow::{anyhow, Result};
 use rand::{seq::SliceRandom, thread_rng};
 
-use self::data_error::DataError;
-
 use super::{fortune_data::fortune_settings::FortuneSettings, FortuneData};
 
-mod data_error;
-
-#[derive(Debug, PartialEq, Eq, Clone)]
-pub struct FortuneSlip<'a> {
+#[derive(Debug, PartialEq, Eq)]
+pub struct FortuneSlipTextRef<'a> {
     pub header: &'a str,
     pub luck_level: &'a str,
     pub category_to_fortune: HashMap<&'a String, &'a String>,
 }
 
-pub struct FortuneSlipsFactory<'a> {
+#[derive(Debug, PartialEq, Eq)]
+pub struct FortuneSplitter<'a> {
     fortune_data: &'a FortuneData,
     fortune_settings: &'a FortuneSettings,
 }
 
-impl<'a> FortuneSlipsFactory<'a> {
+impl<'a> FortuneSplitter<'a> {
     pub fn new(fortune_data: &'a FortuneData) -> Self {
-        FortuneSlipsFactory {
+        FortuneSplitter {
             fortune_data,
             fortune_settings: fortune_data.get_settings(),
         }
@@ -36,7 +33,7 @@ impl<'a> FortuneSlipsFactory<'a> {
     /// The factory creates as many slips as possible without duplication by finding
     /// for every luck level the topic with the least fortunes.
     ///
-    pub fn create_slips(&self) -> Result<Vec<FortuneSlip>> {
+    pub fn shuffle_and_split(&self) -> Result<Vec<FortuneSlipTextRef<'a>>> {
         let luck_level_keys = self.fortune_data.get_luck_level_keys();
 
         let mut all_slips = vec![];
@@ -46,10 +43,16 @@ impl<'a> FortuneSlipsFactory<'a> {
             all_slips.extend(slips);
         }
 
+        // Not necessary, but output PDFs are more pleasing this way.
+        all_slips.sort_by_key(|key| key.luck_level);
+
         Ok(all_slips)
     }
 
-    fn create_random_slips_for_luck(&self, luck_level_key: &String) -> Result<Vec<FortuneSlip>> {
+    fn create_random_slips_for_luck(
+        &self,
+        luck_level_key: &String,
+    ) -> Result<Vec<FortuneSlipTextRef<'a>>> {
         let slips_per_category = self.get_shuffled_fortunes_per_category(luck_level_key)?;
 
         let nr_fortunes = self.max_nr_of_fortunes(&slips_per_category)?;
@@ -63,7 +66,7 @@ impl<'a> FortuneSlipsFactory<'a> {
     fn get_shuffled_fortunes_per_category(
         &self,
         luck_level_key: &String,
-    ) -> Result<HashMap<&String, Vec<&String>>> {
+    ) -> Result<HashMap<&'a String, Vec<&'a String>>> {
         let luck_categories = self.fortune_data.get_categories();
         let mut category_to_slips = HashMap::new();
 
@@ -79,7 +82,7 @@ impl<'a> FortuneSlipsFactory<'a> {
         &self,
         luck_category: &String,
         luck_level_key: &String,
-    ) -> Result<Vec<&String>> {
+    ) -> Result<Vec<&'a String>> {
         let mut fortune_slips = self
             .fortune_data
             .get_fortune_text(&luck_category, &luck_level_key)
@@ -110,20 +113,18 @@ impl<'a> FortuneSlipsFactory<'a> {
     fn get_slip_for_idx(
         &self,
         idx: usize,
-        slips_per_category: &HashMap<&String, Vec<&'a String>>,
+        slips_per_category: &HashMap<&'a String, Vec<&'a String>>,
         luck_level_key: &String,
-    ) -> Result<FortuneSlip> {
+    ) -> Result<FortuneSlipTextRef<'a>> {
         let luck_level_info = self
             .fortune_settings
             .luck_levels
             .get(luck_level_key)
-            .ok_or(DataError::KeyNotFound {
-                key: luck_level_key.into(),
-            })?;
+            .ok_or(anyhow!("Key not found in luck levels: {}.", luck_level_key))?;
 
         let cat_to_fort = self.get_fortune_text_for_single_slip(slips_per_category, idx)?;
 
-        Ok(FortuneSlip {
+        Ok(FortuneSlipTextRef {
             header: &luck_level_info.jap,
             luck_level: &luck_level_info.eng,
             category_to_fortune: cat_to_fort,
@@ -132,16 +133,16 @@ impl<'a> FortuneSlipsFactory<'a> {
 
     fn get_fortune_text_for_single_slip(
         &self,
-        slips_per_category: &HashMap<&String, Vec<&'a String>>,
+        slips_per_category: &HashMap<&'a String, Vec<&'a String>>,
         idx: usize,
-    ) -> Result<HashMap<&String, &String>> {
+    ) -> Result<HashMap<&'a String, &'a String>> {
         let mut category_to_one_fortune = HashMap::new();
         for cat in self.fortune_data.get_categories() {
             let fortune = slips_per_category
                 .get(cat)
-                .ok_or(DataError::KeyNotFound { key: cat.into() })?
-                .get(idx)
-                .ok_or(DataError::OutOfBounds { idx })?;
+                .and_then(|x| x.get(idx))
+                .ok_or(anyhow!("Error"))?;
+
             category_to_one_fortune.insert(cat, *fortune);
         }
 
@@ -151,14 +152,14 @@ impl<'a> FortuneSlipsFactory<'a> {
 
 #[cfg(test)]
 mod tests {
-    use crate::fortune::{fortune_data::FortuneData, fortune_slips::FortuneSlipsFactory};
+    use crate::fortune::{fortune_data::FortuneData, fortune_splitter::FortuneSplitter};
 
     #[test]
     fn test_create_fortune_slips() -> anyhow::Result<()> {
         let fortune_data = FortuneData::open("test_utils/data/fortune_settings.yaml")?;
 
-        let fortune_slip_creator = FortuneSlipsFactory::new(&fortune_data);
-        let fortune_slips = fortune_slip_creator.create_slips()?;
+        let fortune_slip_creator = FortuneSplitter::new(&fortune_data);
+        let fortune_slips = fortune_slip_creator.shuffle_and_split()?;
 
         assert_eq!(fortune_slips.len(), 5);
         assert_eq!(
