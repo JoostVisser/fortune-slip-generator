@@ -18,4 +18,5 @@ fn main() {
     let output_pdf_path = "test.pdf";
     info!("Generating fortune slips to '{}'...", output_pdf_path);
     a.generate_to_pdf("test.pdf").unwrap();
+    info!("Done!");
 }

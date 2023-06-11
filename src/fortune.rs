@@ -2,7 +2,7 @@ use std::path::{Path, PathBuf};
 
 use anyhow::{bail, Result};
 use itertools::intersperse;
-use log::debug;
+use log::{debug, info};
 use rayon::prelude::*;
 use tempfile::tempdir;
 
@@ -46,7 +46,6 @@ impl FortuneGenerator {
         }
 
         let fortunes = self.get_random_fortunes()?;
-
         let temp_dir = tempdir()?;
 
         let front_pdf_paths = self.generate_pdf_fortunes(temp_dir.path(), fortunes)?;
@@ -130,10 +129,12 @@ impl FortuneGenerator {
     }
 
     fn convert_svg_to_pdf_same_dir(&self, svg_paths: &[SvgFile]) -> Result<Vec<PathBuf>> {
-        svg_paths
+        info!("Converting SVG files to PDF... (can take a while)");
+        let result = svg_paths
             .par_iter()
             .map(|svg_path| svg_path.to_pdf_same_name())
-            .collect::<Result<Vec<_>>>()
+            .collect::<Result<Vec<_>>>();
+        result
     }
 
     fn open_single_slip_writer(&self) -> Result<FortuneSlipWriter> {

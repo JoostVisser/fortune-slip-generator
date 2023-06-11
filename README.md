@@ -35,13 +35,24 @@ The following needs to be installed on your system:
 2. Fonts (the default template uses Dosis, Hina Mincho and Kaushan Script)
 
 ### Windows installation
-1. Install InkScape
-   - Download the latest version of Inkscape: https://inkscape.org/release/
-   - Ensure that the Inkscape installation directory is in your PATH
+#### Step 1: Install Inkscape
 
-2. Install Fonts
-   - Open the fonts from the `fonts` directory
-   - Right click on the font file and select "Install for all users"
+InkScape needs to be installed and added to your PATH. To do this:
+1. Download the latest version of Inkscape: https://inkscape.org/release/
+2. During the installation, select to add InkScape to your path
+
+If you get an error (such as Path being too long), you can add Inkscape directory to
+your PATH manually:
+- Open the start menu and search for "Edit the system environment variables"
+- Select "Environment Variables"
+- Select "Path" under "System variables" and click on "Edit"
+- Select "New" and add the path to the Inkscape directory (e.g. `C:\Program Files\Inkscape\bin`)
+
+#### Step 2: Install the fonts
+
+To install the fonts:
+1. Open the fonts from the `fonts` directory
+2. Right click on the font file and select "Install for all users"
 
 ### Linux installation
 

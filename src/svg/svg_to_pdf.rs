@@ -4,6 +4,7 @@ use std::{
 };
 
 use anyhow::{anyhow, Ok, Result};
+use log::debug;
 
 pub fn svg_to_pdf(path_to_svg: impl AsRef<Path>, output_path: impl AsRef<Path>) -> Result<()> {
     let output_path_str = output_path
@@ -15,15 +16,8 @@ pub fn svg_to_pdf(path_to_svg: impl AsRef<Path>, output_path: impl AsRef<Path>) 
         .to_str()
         .ok_or(anyhow!("Input path is not valid unicode"))?;
 
-    println!("Converting {} to {}", path_to_svg_str, output_path_str);
+    debug!("Converting {} to {}", path_to_svg_str, output_path_str);
 
-    let parent_path = path_to_svg.as_ref().parent().unwrap();
-    let parent_files = parent_path.read_dir().unwrap();
-    for file in parent_files {
-        let file = file.unwrap();
-        let file_name = file.file_name();
-        println!("File name: {:?}", file_name);
-    }
     let status = execute_inkscape_command(path_to_svg_str, output_path_str)?;
 
     if status.success() {
@@ -41,18 +35,17 @@ fn execute_inkscape_command(
     path_to_svg: &str,
     output_path: &str,
 ) -> Result<std::process::ExitStatus> {
-    println!("Input file path: {}", path_to_svg);
-    println!("Export file name: {}", output_path);
+    debug!("Input file path: {}", path_to_svg);
+    debug!("Export file name: {}", output_path);
 
     let mut command = Command::new("inkscape");
     let temp = command
         .arg("--export-area-drawing")
         .arg("--export-text-to-path")
         .arg("--export-type=pdf")
+        .arg("--export-text-to-path")
         .arg(format!("--export-filename={output_path}"))
         .arg(path_to_svg);
-
-    println!("Args: {:?}", temp.get_args().collect::<Vec<_>>());
 
     let result = temp
         .stdout(Stdio::piped())
@@ -60,7 +53,7 @@ fn execute_inkscape_command(
         .spawn()?
         .wait_with_output()?;
 
-    println!(
+    debug!(
         "Inkscape output
          StdOut: {}
          StdErr: {}",

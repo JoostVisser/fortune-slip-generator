@@ -4,7 +4,6 @@ use std::{
 };
 
 use anyhow::{bail, Result};
-use log::debug;
 
 use super::svg_to_pdf;
 
@@ -25,12 +24,6 @@ impl SvgFile {
 
     pub fn to_pdf(&self, pdf_path: impl AsRef<Path>) -> Result<PathBuf> {
         svg_to_pdf::svg_to_pdf(&self.path, pdf_path.as_ref())?;
-
-        debug!(
-            "Converting '{}' to '{}'",
-            self.path.display(),
-            pdf_path.as_ref().display()
-        );
 
         return Ok(pdf_path.as_ref().to_path_buf());
     }
