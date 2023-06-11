@@ -53,7 +53,7 @@ fn execute_inkscape_command(
         .arg("--batch-process")
         .arg("--export-type=pdf")
         .arg(format!("--export-filename=\"{output_path}\""))
-        .arg(path_to_svg)
+        .arg("\"path_to_svg\"")
         .stdout(Stdio::piped())
         .stderr(Stdio::piped())
         .spawn()?
