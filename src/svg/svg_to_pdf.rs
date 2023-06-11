@@ -38,15 +38,12 @@ fn execute_inkscape_command(
     debug!("Input file path: {}", path_to_svg);
     debug!("Export file name: {}", output_path);
 
-    let mut command = Command::new("inkscape");
-    let temp = command
+    let result = Command::new("inkscape")
         .arg("--export-type=pdf")
         .arg("--export-dpi=300")
         .arg("--export-pdf-version=1.5")
         .arg(format!("--export-filename={output_path}"))
-        .arg(path_to_svg);
-
-    let result = temp
+        .arg(path_to_svg)
         .stdout(Stdio::piped())
         .stderr(Stdio::piped())
         .spawn()?
