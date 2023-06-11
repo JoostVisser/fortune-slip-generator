@@ -7,7 +7,7 @@ With the Fortune Slip Generator, you can create your very own Fortune Slips!
 A sample fortune slip looks like this:
 
 <div align="center">
-<img width="65%" src="image-1.png" alt="A sample fortune slip">
+<img width="65%" src="data/readme_assets/sample_slip.png" alt="A sample fortune slip">
 </div>
 
 The default output of the program is a PDF file, which can be printed on A4 paper.
