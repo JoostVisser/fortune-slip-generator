@@ -49,8 +49,8 @@ impl FortuneGenerator {
 
         let temp_dir = TempDir::new()?;
 
-        let front_pdf_paths = self.generate_pdf_fortunes(&temp_dir.path(), fortunes)?;
-        let backside_pdf_path = self.generate_backside_pdf(&temp_dir.path())?;
+        let front_pdf_paths = self.generate_pdf_fortunes(temp_dir.path(), fortunes)?;
+        let backside_pdf_path = self.generate_backside_pdf(temp_dir.path())?;
 
         Self::intersperse_and_merge_pdfs(front_pdf_paths, backside_pdf_path, pdf_path)
     }
@@ -93,7 +93,7 @@ impl FortuneGenerator {
         let backside_svg_file = SvgFile::new(backside_template_path)?;
 
         let target_path = dir.join("backside.pdf");
-        backside_svg_file.to_pdf(&target_path)
+        backside_svg_file.to_pdf(target_path)
     }
 
     fn intersperse_and_merge_pdfs(
@@ -146,7 +146,7 @@ impl FortuneGenerator {
             .cloned()
             .collect::<Vec<_>>();
 
-        Ok(FortuneSlipWriter::new(svg_editor, &fortune_categories)?)
+        FortuneSlipWriter::new(svg_editor, &fortune_categories)
     }
 }
 

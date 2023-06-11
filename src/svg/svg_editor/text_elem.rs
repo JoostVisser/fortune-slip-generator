@@ -24,10 +24,10 @@ impl TryFrom<&Element> for TextElem {
             bail!("Text element '{}' has no id", value.get_inner_text()?);
         }
 
-        return Ok(TextElem {
+        Ok(TextElem {
             id: value.attributes["id"].to_string(),
             attr: value.attributes.clone(),
-            text: value.get_inner_text()?.to_string(),
-        });
+            text: value.get_inner_text()?,
+        })
     }
 }

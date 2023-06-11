@@ -34,7 +34,7 @@ impl SvgFile {
     }
 }
 
-fn check_valid_and_existing_svg(path: &PathBuf) -> bool {
+fn check_valid_and_existing_svg(path: &Path) -> bool {
     if path.exists() && path.is_file() {
         if let Some(extension) = path.extension() {
             if extension == "svg" {

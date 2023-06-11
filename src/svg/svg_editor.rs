@@ -23,7 +23,6 @@ impl SvgEditor {
         let text_elems_ordered = elem_keys
             .iter()
             .map(|&x| TextElem::try_from(x))
-            .map(|x| x.and_then(|y| Ok(y)))
             .collect::<Result<Vec<_>>>()?;
 
         Ok(SvgEditor {

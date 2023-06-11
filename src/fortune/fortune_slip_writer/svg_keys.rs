@@ -34,7 +34,7 @@ fn retrieve_svg_elem_keys_for_chunk(
     text_elem_chunk: &[&TextElem],
     fortune_categories: &[String],
 ) -> Result<SvgKeys> {
-    let missing_tags = check_missing_tags(text_elem_chunk, &fortune_categories);
+    let missing_tags = check_missing_tags(text_elem_chunk, fortune_categories);
 
     missing_tags?;
 
@@ -58,7 +58,7 @@ fn check_missing_tags(text_elem_chunk: &[&TextElem], fortune_categories: &[Strin
     allowed_tags.extend_from_slice(fortune_categories);
 
     for text_elem in text_elem_chunk {
-        if text_elem.text.contains("_") && !is_relevant_text_elem(text_elem, fortune_categories) {
+        if text_elem.text.contains('_') && !is_relevant_text_elem(text_elem, fortune_categories) {
             bail!(
                 "Missing tag in fortune slip: {}. Allowed tags: {:?}",
                 text_elem.text,
@@ -84,8 +84,8 @@ fn add_text_elem_to_keys(svg_elem_keys: &mut SvgKeys, text_elem: &TextElem) {
     match &text_elem.text {
         s if s.contains("header") => svg_elem_keys.header_key = text_elem.id.clone(),
         s if s.contains("luck_level") => svg_elem_keys.luck_level_key = text_elem.id.clone(),
-        s if s.contains("_") => {
-            let (category, _) = s.split_once("_").unwrap();
+        s if s.contains('_') => {
+            let (category, _) = s.split_once('_').unwrap();
             svg_elem_keys
                 .cat_to_fortune_keys
                 .insert(category.to_string(), text_elem.id.clone());

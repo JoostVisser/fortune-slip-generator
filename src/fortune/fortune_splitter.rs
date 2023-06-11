@@ -58,8 +58,7 @@ impl<'a> FortuneSplitter<'a> {
         let nr_fortunes = self.max_nr_of_fortunes(&slips_per_category)?;
 
         (0..nr_fortunes)
-            .into_iter()
-            .map(|idx| self.get_slip_for_idx(idx, &slips_per_category, &luck_level_key))
+            .map(|idx| self.get_slip_for_idx(idx, &slips_per_category, luck_level_key))
             .collect()
     }
 
@@ -85,7 +84,7 @@ impl<'a> FortuneSplitter<'a> {
     ) -> Result<Vec<&'a String>> {
         let mut fortune_slips = self
             .fortune_data
-            .get_fortune_text(&luck_category, &luck_level_key)
+            .get_fortune_text(luck_category, luck_level_key)
             .ok_or(anyhow!(
                 "Could not find luck category {} with key {} in the fortune data.",
                 luck_category,
