@@ -32,6 +32,7 @@ jobs:
           # Matrix instances (other than OS) need to be added to this explicitly
           key: ${{ matrix.rust-version }}
       - uses: ./.github/actions/install_inkscape
+      - run: inkscape --help
       - name: Install nextest
         uses: taiki-e/install-action@nextest
       - name: Run tests

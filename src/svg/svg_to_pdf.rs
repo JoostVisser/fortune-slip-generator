@@ -4,7 +4,7 @@ use std::{
 };
 
 use anyhow::{anyhow, Ok, Result};
-use log::{debug, info};
+use log::debug;
 
 pub fn svg_to_pdf(path_to_svg: impl AsRef<Path>, output_path: impl AsRef<Path>) -> Result<()> {
     let output_path_str = output_path
@@ -16,14 +16,14 @@ pub fn svg_to_pdf(path_to_svg: impl AsRef<Path>, output_path: impl AsRef<Path>) 
         .to_str()
         .ok_or(anyhow!("Input path is not valid unicode"))?;
 
-    info!("Converting {} to {}", path_to_svg_str, output_path_str);
+    println!("Converting {} to {}", path_to_svg_str, output_path_str);
 
     let parent_path = path_to_svg.as_ref().parent().unwrap();
     let parent_files = parent_path.read_dir().unwrap();
     for file in parent_files {
         let file = file.unwrap();
         let file_name = file.file_name();
-        info!("File name: {:?}", file_name);
+        println!("File name: {:?}", file_name);
     }
     let status = execute_inkscape_command(path_to_svg_str, output_path_str)?;
 
@@ -54,7 +54,7 @@ fn execute_inkscape_command(
         .spawn()?
         .wait_with_output()?;
 
-    debug!(
+    println!(
         "Inkscape output
          StdOut: {}
          StdErr: {}",
