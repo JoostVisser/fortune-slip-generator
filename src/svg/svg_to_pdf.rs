@@ -16,14 +16,14 @@ pub fn svg_to_pdf(path_to_svg: impl AsRef<Path>, output_path: impl AsRef<Path>) 
         .to_str()
         .ok_or(anyhow!("Input path is not valid unicode"))?;
 
-    print!("Converting {} to {}", path_to_svg_str, output_path_str);
+    println!("Converting {} to {}", path_to_svg_str, output_path_str);
 
     let parent_path = path_to_svg.as_ref().parent().unwrap();
     let parent_files = parent_path.read_dir().unwrap();
     for file in parent_files {
         let file = file.unwrap();
         let file_name = file.file_name();
-        print!("File name: {:?}", file_name);
+        println!("File name: {:?}", file_name);
     }
     let status = execute_inkscape_command(path_to_svg_str, output_path_str)?;
 
@@ -42,12 +42,17 @@ fn execute_inkscape_command(
     path_to_svg: &str,
     output_path: &str,
 ) -> Result<std::process::ExitStatus> {
+
+    println!("Export file name: {}", output_path);
+
+
+
     let result = Command::new("inkscape")
         .arg("--export-area-drawing")
         .arg("--export-text-to-path")
         .arg("--batch-process")
         .arg("--export-type=pdf")
-        .arg(format!("--export-filename={output_path}"))
+        .arg(format!("--export-filename=\"{output_path}\""))
         .arg(path_to_svg)
         .stdout(Stdio::piped())
         .stderr(Stdio::piped())
