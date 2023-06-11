@@ -4,7 +4,6 @@ use std::{
 };
 
 use anyhow::{anyhow, Ok, Result};
-use log::debug;
 
 pub fn svg_to_pdf(path_to_svg: impl AsRef<Path>, output_path: impl AsRef<Path>) -> Result<()> {
     let output_path_str = output_path
