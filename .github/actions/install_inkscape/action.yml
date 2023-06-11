@@ -1,5 +1,6 @@
 
 name: 'Install Inkscape'
+description: "Installs Inkscape on Linux and Windows"
 runs:
   using: "composite"
   steps:
