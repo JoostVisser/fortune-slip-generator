@@ -34,11 +34,11 @@ pub fn merge_pdf(input_paths: &[impl AsRef<Path>], output_path: impl AsRef<Path>
 
         documents_pages.extend(
             doc.get_pages()
-                .into_iter()
-                .map(|(_, object_id)| {
+                .into_values()
+                .map(|object_id| {
                     if !first {
                         let bookmark = Bookmark::new(
-                            String::from(format!("Page_{}", pagenum)),
+                            format!("Page_{}", pagenum),
                             [0.0, 0.0, 1.0],
                             0,
                             object_id,
@@ -141,8 +141,8 @@ pub fn merge_pdf(input_paths: &[impl AsRef<Path>], output_path: impl AsRef<Path>
         dictionary.set(
             "Kids",
             documents_pages
-                .into_iter()
-                .map(|(object_id, _)| Object::Reference(object_id))
+                .into_keys()
+                .map(Object::Reference)
                 .collect::<Vec<_>>(),
         );
 
@@ -170,15 +170,13 @@ pub fn merge_pdf(input_paths: &[impl AsRef<Path>], output_path: impl AsRef<Path>
     // Reorder all new Document objects
     document.renumber_objects();
 
-    //Set any Bookmarks to the First child if they are not set to a page
+    // Set any Bookmarks to the First child if they are not set to a page
     document.adjust_zero_pages();
 
-    //Set all bookmarks to the PDF Object tree then set the Outlines to the Bookmark content map.
+    // Set all bookmarks to the PDF Object tree then set the Outlines to the Bookmark content map.
     if let Some(n) = document.build_outline() {
-        if let Ok(x) = document.get_object_mut(catalog_object.0) {
-            if let Object::Dictionary(ref mut dict) = x {
-                dict.set("Outlines", Object::Reference(n));
-            }
+        if let Ok(Object::Dictionary(ref mut dict)) = document.get_object_mut(catalog_object.0) {
+            dict.set("Outlines", Object::Reference(n));
         }
     }
 
@@ -229,7 +227,7 @@ mod tests {
         // Merge the input files
         let result = merge_pdf(
             &[&input_path, &input_path],
-            &tempdir.path().join("output.pdf"),
+            tempdir.path().join("output.pdf"),
         );
 
         // Verify that the merge operation failed with an error message

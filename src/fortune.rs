@@ -203,7 +203,7 @@ mod tests {
     #[rstest]
     fn test_generate_to_svg_dir(fortune_generator: &FortuneGenerator) -> Result<()> {
         let temp_dir = tempfile::tempdir()?;
-        let svg_paths = fortune_generator.generate_to_svg_dir(&temp_dir.path())?;
+        let svg_paths = fortune_generator.generate_to_svg_dir(temp_dir.path())?;
 
         let paths = fs::read_dir(temp_dir.path())?;
 
@@ -225,7 +225,7 @@ mod tests {
     #[rstest]
     fn test_generate_to_pdf_folder_error(fortune_generator: &FortuneGenerator) {
         let temp_dir = tempfile::tempdir().unwrap();
-        let generation_result = fortune_generator.generate_to_pdf(&temp_dir.path());
+        let generation_result = fortune_generator.generate_to_pdf(temp_dir.path());
 
         assert!(generation_result.is_err());
     }
@@ -234,7 +234,7 @@ mod tests {
     fn test_generate_to_svg_file_error(fortune_generator: &FortuneGenerator) {
         let temp_dir = tempfile::tempdir().unwrap();
         let svg_path = temp_dir.path().join("fortunes.svg");
-        let generation_result = fortune_generator.generate_to_svg_dir(&svg_path);
+        let generation_result = fortune_generator.generate_to_svg_dir(svg_path);
 
         assert!(generation_result.is_err());
     }

@@ -112,7 +112,7 @@ mod tests {
     #[fixture]
     fn svg_editor() -> SvgEditor {
         let temp_file = test_utils::create_temp_file("temp.svg", SVG_EXAMPLE);
-        SvgEditor::open(&temp_file.path).unwrap()
+        SvgEditor::open(temp_file.path).unwrap()
     }
 
     #[rstest]
@@ -169,7 +169,7 @@ mod tests {
 
         let (_dir, path) = create_file_and_save(&mut svg_editor);
 
-        let new_svg_editor = SvgEditor::open(&path).unwrap();
+        let new_svg_editor = SvgEditor::open(path).unwrap();
         let new_text_elem = new_svg_editor.get_text_elems_map_ordered()[0];
         assert_eq!(new_text_elem.attr["fill"], "red");
     }

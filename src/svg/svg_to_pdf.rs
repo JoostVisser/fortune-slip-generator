@@ -68,8 +68,8 @@ mod tests {
         let temp_file = test_utils::create_temp_file("temp.svg", SVG_EXAMPLE);
         let temp_pdf_path = temp_file.dir.path().join("temp.pdf");
 
-        assert_eq!(temp_pdf_path.exists(), false);
+        assert!(!temp_pdf_path.exists());
         svg_to_pdf(&temp_file.path, &temp_pdf_path).unwrap();
-        assert_eq!(temp_pdf_path.exists(), true);
+        assert!(temp_pdf_path.exists());
     }
 }

@@ -127,8 +127,8 @@ mod tests {
     #[fixture]
     fn xml_tree() -> XmlTree {
         let temp_file = test_utils::create_temp_file("temp.svg", SVG_EXAMPLE);
-        let xml_tree = XmlTree::open(&temp_file.path).unwrap();
-        xml_tree
+        
+        XmlTree::open(temp_file.path).unwrap()
     }
 
     #[rstest]

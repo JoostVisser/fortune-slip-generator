@@ -258,7 +258,6 @@ mod tests {
         nr_fortunes: usize,
     ) -> Result<()> {
         let fortune_text_refs = (0..nr_fortunes)
-            .into_iter()
             .map(|_| fortune_text.to_ref())
             .collect::<Vec<_>>();
 
