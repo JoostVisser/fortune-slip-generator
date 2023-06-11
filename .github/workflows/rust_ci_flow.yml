@@ -37,7 +37,8 @@ jobs:
       - uses: taiki-e/install-action@nextest
       - uses: actions-rs/cargo@v1
         with:
-          command: nextest r
+          command: nextest
+          args: run
 
   fmt:
     name: Rustfmt
