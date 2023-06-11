@@ -42,6 +42,7 @@ fn execute_inkscape_command(
     path_to_svg: &str,
     output_path: &str,
 ) -> Result<std::process::ExitStatus> {
+    println!("Input file path: {}", path_to_svg);
     println!("Export file name: {}", output_path);
 
     let result = Command::new("inkscape")
@@ -49,14 +50,14 @@ fn execute_inkscape_command(
         .arg("--export-text-to-path")
         .arg("--batch-process")
         .arg("--export-type=pdf")
-        .arg(format!("--export-filename=\"{output_path}\""))
-        .arg(format!("\"{path_to_svg}\""))
+        .arg(format!("--export-filename={output_path}"))
+        .arg(path_to_svg)
         .stdout(Stdio::piped())
         .stderr(Stdio::piped())
         .spawn()?
         .wait_with_output()?;
 
-    debug!(
+    println!(
         "Inkscape output
          StdOut: {}
          StdErr: {}",
