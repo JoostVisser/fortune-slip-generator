@@ -1,7 +1,8 @@
 use std::collections::HashMap;
 
 use crate::{
-    svg::svg_editor::{text_elem::TextElem, SvgEditor}, constants::NR_SLIPS_PER_PAGE,
+    constants::NR_SLIPS_PER_PAGE,
+    svg::svg_editor::{text_elem::TextElem, SvgEditor},
 };
 
 use anyhow::{bail, Result};
@@ -77,7 +78,6 @@ fn is_relevant_text_elem(text_elem: &TextElem, fortune_categories: &[String]) ->
     let result = allowed_tags.iter().any(|x| text_elem.text.contains(x));
 
     result
-
 }
 
 fn add_text_elem_to_keys(svg_elem_keys: &mut SvgKeys, text_elem: &TextElem) {

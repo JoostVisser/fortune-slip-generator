@@ -2,10 +2,7 @@ use std::path::Path;
 
 use anyhow::Result;
 
-use self::{
-    fortune_loader::FortuneDataInner,
-    fortune_settings::FortuneSettings,
-};
+use self::{fortune_loader::FortuneDataInner, fortune_settings::FortuneSettings};
 
 mod fortune_loader;
 pub mod fortune_settings;
@@ -52,5 +49,4 @@ impl FortuneData {
             .keys()
             .collect()
     }
-
 }

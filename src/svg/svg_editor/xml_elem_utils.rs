@@ -7,17 +7,16 @@ pub trait ElemUtils {
 }
 
 impl ElemUtils for Element {
-
     fn get_inner_text(&self) -> Result<String> {
         let text = self
-        .children
-        .first()
-        .and_then(|node| node.as_element())
-        .and_then(|node| node.get_text())
-        .ok_or(anyhow::anyhow!(
-            "No child element found with text for element {:?}.",
-            self
-        ))?;
+            .children
+            .first()
+            .and_then(|node| node.as_element())
+            .and_then(|node| node.get_text())
+            .ok_or(anyhow::anyhow!(
+                "No child element found with text for element {:?}.",
+                self
+            ))?;
 
         Ok(text.to_string())
     }
