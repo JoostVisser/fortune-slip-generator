@@ -1,14 +1,14 @@
-
-
-use std::{path::{Path, PathBuf}, fs};
+use std::{
+    fs,
+    path::{Path, PathBuf},
+};
 
 use tempfile::TempDir;
 
 pub struct TempFile {
     pub dir: TempDir,
-    pub path: PathBuf
+    pub path: PathBuf,
 }
-
 
 pub fn create_temp_file<P: AsRef<Path>>(file_path: P, file_contents: &str) -> TempFile {
     let temp_dir = TempDir::new().unwrap();
@@ -18,6 +18,6 @@ pub fn create_temp_file<P: AsRef<Path>>(file_path: P, file_contents: &str) -> Te
 
     TempFile {
         dir: temp_dir,
-        path: temp_file_path
+        path: temp_file_path,
     }
 }

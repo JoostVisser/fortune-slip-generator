@@ -34,9 +34,10 @@ jobs:
         with:
           packages: inkscape
           version: 1.0
+      - uses: taiki-e/install-action@nextest
       - uses: actions-rs/cargo@v1
         with:
-          command: test
+          command: nextest r
 
   fmt:
     name: Rustfmt
