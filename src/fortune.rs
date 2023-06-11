@@ -162,23 +162,22 @@ mod tests {
     use crate::{fortune::FortuneGenerator, svg::svg_file::SvgFile};
 
     #[fixture]
-    #[once]
     fn fortune_generator() -> FortuneGenerator {
         FortuneGenerator::open("test_utils/data/fortune_settings.yaml").unwrap()
     }
 
     #[rstest]
-    fn test_open(_fortune_generator: &FortuneGenerator) {}
+    fn test_open(_fortune_generator: FortuneGenerator) {}
 
     #[rstest]
-    fn test_generate_to_pdf_with_directory_path(fortune_generator: &FortuneGenerator) {
+    fn test_generate_to_pdf_with_directory_path(fortune_generator: FortuneGenerator) {
         let temp_dir = tempfile::tempdir().unwrap();
         let result = fortune_generator.generate_to_pdf(temp_dir.path());
         assert!(result.is_err());
     }
 
     #[rstest]
-    fn test_generate_to_pdf(fortune_generator: &FortuneGenerator) -> Result<()> {
+    fn test_generate_to_pdf(fortune_generator: FortuneGenerator) -> Result<()> {
         let temp_dir = tempfile::tempdir()?;
         let pdf_path = temp_dir.path().join("fortunes.pdf");
         fortune_generator.generate_to_pdf(&pdf_path)?;
@@ -201,7 +200,7 @@ mod tests {
     }
 
     #[rstest]
-    fn test_generate_to_svg_dir(fortune_generator: &FortuneGenerator) -> Result<()> {
+    fn test_generate_to_svg_dir(fortune_generator: FortuneGenerator) -> Result<()> {
         let temp_dir = tempfile::tempdir()?;
         let svg_paths = fortune_generator.generate_to_svg_dir(temp_dir.path())?;
 
@@ -223,7 +222,7 @@ mod tests {
     }
 
     #[rstest]
-    fn test_generate_to_pdf_folder_error(fortune_generator: &FortuneGenerator) {
+    fn test_generate_to_pdf_folder_error(fortune_generator: FortuneGenerator) {
         let temp_dir = tempfile::tempdir().unwrap();
         let generation_result = fortune_generator.generate_to_pdf(temp_dir.path());
 
@@ -231,7 +230,7 @@ mod tests {
     }
 
     #[rstest]
-    fn test_generate_to_svg_file_error(fortune_generator: &FortuneGenerator) {
+    fn test_generate_to_svg_file_error(fortune_generator: FortuneGenerator) {
         let temp_dir = tempfile::tempdir().unwrap();
         let svg_path = temp_dir.path().join("fortunes.svg");
         let generation_result = fortune_generator.generate_to_svg_dir(svg_path);
