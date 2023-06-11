@@ -40,10 +40,9 @@ fn execute_inkscape_command(
 
     let mut command = Command::new("inkscape");
     let temp = command
-        .arg("--export-area-drawing")
-        .arg("--export-text-to-path")
         .arg("--export-type=pdf")
-        .arg("--export-text-to-path")
+        .arg("--export-dpi=300")
+        .arg("--export-pdf-version=1.5")
         .arg(format!("--export-filename={output_path}"))
         .arg(path_to_svg);
 
