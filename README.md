@@ -1,5 +1,32 @@
 # Fortune Slip Generator
 
+> :construction: The project is still under development. :construction:
+
+With the Fortune Slip Generator, you can create your very own Fortune Slips!
+
+A sample fortune slip looks like this:
+
+<div align="center">
+<img width="65%" src="image-1.png" alt="A sample fortune slip">
+</div>
+
+The default output of the program is a PDF file, which can be printed on A4 paper.
+- Alternating front and back pages
+- Each page contains 4 fortune slips, which can be cut out on the dotted line.
+
+## How to fold the fortune slips
+
+First you want to cut the fortune slips out of the paper.
+
+We found out that the best way to fold them is the following:
+1. Fold the fortune text in half, such that the right side of the slip touches the dotted line.
+2. Fold it in half again the same way.
+3. Fold the left part (with the logo) on top of the right part and glue with a glue stick.
+
+This way, you only have to glue once and the fortune text is on the inside of the slip.
+Moreover, when unfolding the slip, the fortune text is the first thing you see.
+
+
 ## Getting started
 The following needs to be installed on your system:
 1. InkScape
@@ -30,7 +57,6 @@ be similar.
 
 
 
-
 ## Configuration
 ### CLI options
 
@@ -47,6 +73,10 @@ Any SVG file can be used as a template, as long as:
 1. `header`, `luck_level` and all categories are present four times.
 2. Unique IDs are used for each element.
 
-The templates have been created using Figma, and these can be found in the
+The templates have been created using Figma, and a `.fig` file can be found in the
 `data/figma_templates` directory. Feel free to edit them to your liking, then refer to the
 new template in the `settings.yaml`.
+
+In case you use the Figma template, when you export the SVG, ensure you:
+- Select 'Include "id" attribute'
+- Deselect the "Outline text" option (the text needs to be editable)
