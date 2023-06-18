@@ -16,7 +16,6 @@ jobs:
           - ubuntu-latest
           - windows-latest
       fail-fast: false
-    permissions: write-all
     steps:
       - uses: actions/checkout@v3
       - uses: dtolnay/rust-toolchain@stable
@@ -29,7 +28,6 @@ jobs:
         uses: taiki-e/install-action@cargo-llvm-cov
       - name: Install nextest
         uses: taiki-e/install-action@nextest
-      - run: mkdir test_output
       - name: Run tests
         continue-on-error: true
         run: >
@@ -37,24 +35,15 @@ jobs:
           --no-fail-fast
           --verbose
           --profile ci
-          --cobertura
-          --output-path cobertura.xml
-      - name: Code Coverage Report
-        uses: irongut/CodeCoverageSummary@v1.3.0
+          --codecov
+          --output-path codecov.json
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
         with:
-          filename: cobertura.xml
-          badge: true
-          fail_below_min: true
-          format: markdown
-          hide_branch_rate: false
-          indicators: true
-          output: both
-      - name: Test Report
-        uses: dorny/test-reporter@v1
-        with:
-          name: Unit-tests
-          path: target/nextest/ci/junit.xml
-          reporter: jest-junit
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: codecov.json
+          fail_ci_if_error: true
+
 
   fmt:
     name: Style checker
