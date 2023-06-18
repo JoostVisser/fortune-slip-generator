@@ -1,0 +1,7 @@
+{
+    "threshold": 1.0,
+    "reporters": ["console", "badge"],
+    "absolute": true,
+    "min-tokens": 50,
+    "min-lines": 5
+  }

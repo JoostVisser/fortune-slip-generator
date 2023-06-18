@@ -54,41 +54,58 @@ fn check_valid_and_existing_svg(path: &Path) -> bool {
 
 #[cfg(test)]
 mod tests {
-    use std::fs;
+    use test_utils::create_temp_file;
+
+    use pretty_assertions::assert_eq;
 
     use super::*;
 
     #[test]
-    fn test_check_valid_and_existing_svg_with_valid_svg() {
-        let temp_dir = tempfile::tempdir().unwrap();
-        let path = temp_dir.path().join("test.svg");
-        fs::write(&path, "test").unwrap();
-        assert_eq!(check_valid_and_existing_svg(&path), true);
-        fs::remove_file(&path).unwrap();
+    fn test_svg_file_new_with_valid_svg() {
+        let temp_file = create_temp_file("test.svg", "test");
+        let svg_file = SvgFile::new(&temp_file.path).unwrap();
+        assert_eq!(svg_file.path, temp_file.path);
     }
 
     #[test]
-    fn test_check_valid_and_existing_svg_with_invalid_svg() {
-        let temp_dir = tempfile::tempdir().unwrap();
-        let path = temp_dir.path().join("test.txt");
-        fs::write(&path, "test").unwrap();
-        assert_eq!(check_valid_and_existing_svg(&path), false);
-        fs::remove_file(&path).unwrap();
+    fn test_svg_file_new_with_txt_expect_error() {
+        let temp_file = create_temp_file("test.txt", "test");
+        let result = SvgFile::new(&temp_file.path);
+        assert!(result.is_err());
     }
 
     #[test]
-    fn test_check_valid_and_existing_svg_with_nonexistent_file() {
+    fn test_svg_file_new_with_non_existent_svg_expect_error() {
         let temp_dir = tempfile::tempdir().unwrap();
         let path = temp_dir.path().join("nonexistent.svg");
-        assert_eq!(check_valid_and_existing_svg(&path), false);
+        let result = SvgFile::new(&path);
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn test_svg_file_to_pdf() {
+        let temp_file = create_temp_file("test.svg", "test");
+        let pdf_path = temp_file.dir.path().join("hello.pdf");
+        let svg_file = SvgFile::new(&temp_file.path).unwrap();
+        let result = svg_file.to_pdf(&pdf_path);
+        assert_eq!(result.unwrap(), pdf_path);
+    }
+
+    #[test]
+    fn test_svg_file_to_pdf_same_name() {
+        let temp_file = create_temp_file("test.svg", "test");
+        let svg_file = SvgFile::new(&temp_file.path).unwrap();
+        let result = svg_file.to_pdf_same_name();
+
+        let mut pdf_path = temp_file.path.clone();
+        pdf_path.set_extension("pdf");
+        assert_eq!(result.unwrap(), pdf_path);
     }
 
     #[test]
     fn test_svg_file_display() {
-        let temp_dir = tempfile::tempdir().unwrap();
-        let path = temp_dir.path().join("test.svg");
-        fs::write(&path, "test").unwrap();
-        let svg_file = SvgFile::new(path.clone()).unwrap();
-        assert_eq!(format!("{}", svg_file), path.to_string_lossy());
+        let temp_file = create_temp_file("test.svg", "test");
+        let svg_file = SvgFile::new(temp_file.path.clone()).unwrap();
+        assert_eq!(format!("{}", svg_file), temp_file.path.to_string_lossy());
     }
 }
