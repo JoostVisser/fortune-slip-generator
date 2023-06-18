@@ -33,7 +33,7 @@ jobs:
       - name: Run tests
         continue-on-error: true
         run: >
-          cargo llvm-cov nextest run
+          cargo llvm-cov nextest
           --no-fail-fast
           --verbose
           --profile ci
