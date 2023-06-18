@@ -66,7 +66,7 @@ jobs:
         with:
           auth: ${{ secrets.GIST_SECRET }}
           gistID: 4683758f6258e38bbe3169e5b315fdcc
-          filename: script_utils/data/jscpd-badge-output.json
+          filename: jscpd-badge.json
           label: "Copy-Paste"
           minColorRange: 0
           maxColorRange: 20
