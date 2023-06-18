@@ -34,6 +34,12 @@ impl SvgFile {
     }
 }
 
+impl Display for SvgFile {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", &self.path.display())
+    }
+}
+
 fn check_valid_and_existing_svg(path: &Path) -> bool {
     if path.exists() && path.is_file() {
         if let Some(extension) = path.extension() {
@@ -46,8 +52,43 @@ fn check_valid_and_existing_svg(path: &Path) -> bool {
     false
 }
 
-impl Display for SvgFile {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", &self.path.display())
+#[cfg(test)]
+mod tests {
+    use std::fs;
+
+    use super::*;
+
+    #[test]
+    fn test_check_valid_and_existing_svg_with_valid_svg() {
+        let temp_dir = tempfile::tempdir().unwrap();
+        let path = temp_dir.path().join("test.svg");
+        fs::write(&path, "test").unwrap();
+        assert_eq!(check_valid_and_existing_svg(&path), true);
+        fs::remove_file(&path).unwrap();
+    }
+
+    #[test]
+    fn test_check_valid_and_existing_svg_with_invalid_svg() {
+        let temp_dir = tempfile::tempdir().unwrap();
+        let path = temp_dir.path().join("test.txt");
+        fs::write(&path, "test").unwrap();
+        assert_eq!(check_valid_and_existing_svg(&path), false);
+        fs::remove_file(&path).unwrap();
+    }
+
+    #[test]
+    fn test_check_valid_and_existing_svg_with_nonexistent_file() {
+        let temp_dir = tempfile::tempdir().unwrap();
+        let path = temp_dir.path().join("nonexistent.svg");
+        assert_eq!(check_valid_and_existing_svg(&path), false);
+    }
+
+    #[test]
+    fn test_svg_file_display() {
+        let temp_dir = tempfile::tempdir().unwrap();
+        let path = temp_dir.path().join("test.svg");
+        fs::write(&path, "test").unwrap();
+        let svg_file = SvgFile::new(path.clone()).unwrap();
+        assert_eq!(format!("{}", svg_file), path.to_string_lossy());
     }
 }
