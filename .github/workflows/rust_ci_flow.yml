@@ -28,16 +28,42 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: dtolnay/rust-toolchain@stable
-      - uses: Swatinem/rust-cache@v2
         with:
-          # Matrix instances (other than OS) need to be added to this explicitly
-          key: ${{ matrix.rust-version }}
+          components: llvm-tools-preview
+      - uses: Swatinem/rust-cache@v2
       - uses: ./.github/actions/install_inkscape
       - run: inkscape --help
+      - name: Install LLVM Cov
+        uses: taiki-e/install-action@cargo-llvm-cov
       - name: Install nextest
         uses: taiki-e/install-action@nextest
+      - name: Build binary
+        run: cargo build
       - name: Run tests
-        run: cargo nextest run --no-fail-fast --verbose
+        continue-on-error: true
+        run: >
+          cargo llvm-cov nextest run
+          --no-fail-fast
+          --verbose
+          -P ci
+          --cobertura
+          --output-path "cobertura.xml"
+      - name: Test Report
+        uses: dorny/test-reporter@v1
+        with:
+          name: Unit-tests
+          path: junit.xml
+          reporter: java-junit
+      - name: Code Coverage Report
+        uses: irongut/CodeCoverageSummary@v1.3.0
+        with:
+          filename: cobertura.xml
+          badge: true
+          fail_below_min: true
+          format: markdown
+          hide_branch_rate: false
+          indicators: true
+          output: both
 
   fmt:
     name: Style checker
@@ -50,3 +76,22 @@ jobs:
       - uses: Swatinem/rust-cache@v2
       - run: cargo fmt --all -- --check
       - run: cargo clippy --all -- -D warnings
+
+  release:
+    name: Release
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+          - windows-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    steps:
+      - uses: actions/checkout@v3
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo build --release
+      - uses: actions/upload-artifact@v2
+        with:
+          name: ${{ github.ref }}
+          path: target/release/fortune_generator
