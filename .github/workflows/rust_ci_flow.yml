@@ -45,7 +45,6 @@ jobs:
           files: codecov.json
           fail_ci_if_error: true
 
-
   fmt:
     name: Style checker
     runs-on: ubuntu-latest
@@ -71,9 +70,8 @@ jobs:
           minColorRange: 0
           maxColorRange: 20
           invertColorRange: true
-          message: ${{ env.DUPL_PERCENT }}
+          message: ${{ env.DUPL_PERCENT }}%
           valColorRange: ${{ env.DUPL }}
-
 
   release:
     name: Release

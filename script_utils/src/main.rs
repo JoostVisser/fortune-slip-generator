@@ -10,7 +10,7 @@ fn main() {
         .unwrap();
 
     print!(
-        r#"DUPL={};DUPL_PERCENT="{:.2}%""#,
+        "DUPL={};DUPL_PERCENT={:2}",
         dupl_percentage, dupl_percentage
     );
 }
