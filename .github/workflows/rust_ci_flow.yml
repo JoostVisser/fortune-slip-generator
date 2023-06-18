@@ -37,22 +37,21 @@ jobs:
         uses: taiki-e/install-action@cargo-llvm-cov
       - name: Install nextest
         uses: taiki-e/install-action@nextest
-      - name: Build binary
-        run: cargo build
+      - run: mkdir test_output
       - name: Run tests
         continue-on-error: true
         run: >
           cargo llvm-cov nextest run
           --no-fail-fast
           --verbose
-          -P ci
+          --profile ci
           --cobertura
-          --output-path "cobertura.xml"
+          --output-path cobertura.xml
       - name: Test Report
         uses: dorny/test-reporter@v1
         with:
           name: Unit-tests
-          path: junit.xml
+          path: target/nextest/ci/junit.xml
           reporter: java-junit
       - name: Code Coverage Report
         uses: irongut/CodeCoverageSummary@v1.3.0
