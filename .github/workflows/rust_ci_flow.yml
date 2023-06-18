@@ -70,7 +70,7 @@ jobs:
           minColorRange: 0
           maxColorRange: 20
           invertColorRange: true
-          message: ${{ env.DUPL_PERCENT }}%
+          message: ${{ env.DUPL }}%
           valColorRange: ${{ env.DUPL }}
 
   release:

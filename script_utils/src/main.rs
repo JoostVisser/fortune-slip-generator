@@ -9,8 +9,5 @@ fn main() {
         .as_f64()
         .unwrap();
 
-    print!(
-        "DUPL={};DUPL_PERCENT={:2}",
-        dupl_percentage, dupl_percentage
-    );
+    print!("DUPL={:.2}", dupl_percentage);
 }
