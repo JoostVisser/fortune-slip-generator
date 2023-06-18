@@ -38,6 +38,7 @@ jobs:
           --codecov
           --output-path codecov.json
       - name: Upload coverage to Codecov
+        if: runner.os == 'Linux'
         uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
