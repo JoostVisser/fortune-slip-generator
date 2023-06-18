@@ -56,10 +56,23 @@ jobs:
           components: rustfmt, clippy
       - uses: Swatinem/rust-cache@v2
       - uses: actions/setup-node@v3
-      - run: npm install -g jscpd jscpd-badge-reporter
+      - run: npm install -g jscpd
       - run: cargo fmt --all -- --check
       - run: cargo clippy --all -- -D warnings
       - run: npx jscpd src
+      - run: cargo run --package script_utils --bin script_utils --quiet >> $GITHUB_ENV
+      - name: Create the Badge
+        uses: schneegans/dynamic-badges-action@v1.6.0
+        with:
+          auth: ${{ secrets.GIST_SECRET }}
+          gistID: 4683758f6258e38bbe3169e5b315fdcc
+          filename: script_utils/data/jscpd-badge-output.json
+          label: "Copy-Paste"
+          minColorRange: 0
+          maxColorRange: 20
+          invertColorRange: true
+          message: ${{ env.DUPL_PERCENT }}
+          valColorRange: ${{ env.DUPL }}
 
 
   release:
