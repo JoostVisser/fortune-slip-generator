@@ -31,7 +31,7 @@ impl SvgEditor {
         })
     }
 
-    pub fn get_text_elems_map_ordered(&self) -> Vec<&TextElem> {
+    pub fn get_text_elems_ordered(&self) -> Vec<&TextElem> {
         self.text_elems_ordered.iter().collect()
     }
 
@@ -116,31 +116,16 @@ mod tests {
     }
 
     #[rstest]
-    fn test_get_text_elems_map(svg_editor: SvgEditor) {
-        let text_elems_map = svg_editor.get_text_elems_map_ordered();
+    fn test_get_text_elems(svg_editor: SvgEditor) {
+        let text_elems = svg_editor.get_text_elems_ordered();
 
-        assert_eq!(text_elems_map.len(), 1);
+        assert_eq!(text_elems.len(), 1);
 
-        let text_elem = text_elems_map.first().unwrap();
+        let text_elem = text_elems.first().unwrap();
 
         assert_eq!(text_elem.attr["fill"], "black");
         assert_eq!(text_elem.attr["font-size"], "24");
         assert_eq!(text_elem.text, "Mine turtle!");
-    }
-
-    #[rstest]
-    fn test_update_test_elem(mut svg_editor: SvgEditor) {
-        let text_elem = svg_editor.get_text_elems_map_ordered()[0];
-        assert_eq!(text_elem.attr["fill"], "black");
-
-        let mut new_text_elem = text_elem.clone();
-        new_text_elem
-            .attr
-            .insert("fill".to_string(), "red".to_string());
-        svg_editor.update_text_elem_by_id(new_text_elem).unwrap();
-
-        let text_elem = svg_editor.get_text_elems_map_ordered()[0];
-        assert_eq!(text_elem.attr["fill"], "red");
     }
 
     #[rstest]
@@ -157,20 +142,31 @@ mod tests {
     }
 
     #[rstest]
-    fn test_save_to_svg_with_changes(mut svg_editor: SvgEditor) {
-        let text_elem = svg_editor.get_text_elems_map_ordered()[0];
-        assert_eq!(text_elem.attr["fill"], "black");
+    fn test_update_test_elem(mut svg_editor: SvgEditor) {
+        update_fill_to_red(&mut svg_editor);
 
-        let mut new_text_elem = text_elem.clone();
-        new_text_elem
-            .attr
-            .insert("fill".to_string(), "red".to_string());
-        svg_editor.update_text_elem_by_id(new_text_elem).unwrap();
+        let text_elem = svg_editor.get_text_elems_ordered()[0];
+        assert_eq!(text_elem.attr["fill"], "red");
+    }
+
+    #[rstest]
+    fn test_save_to_svg_with_changes(mut svg_editor: SvgEditor) {
+        update_fill_to_red(&mut svg_editor);
 
         let (_dir, path) = create_file_and_save(&mut svg_editor);
 
         let new_svg_editor = SvgEditor::open(path).unwrap();
-        let new_text_elem = new_svg_editor.get_text_elems_map_ordered()[0];
+        let new_text_elem = new_svg_editor.get_text_elems_ordered()[0];
         assert_eq!(new_text_elem.attr["fill"], "red");
     }
+
+    fn update_fill_to_red(svg_editor: &mut SvgEditor) {
+        let text_elem = svg_editor.get_text_elems_ordered()[0];
+        assert_eq!(text_elem.attr["fill"], "black");
+        let mut new_text_elem = text_elem.clone();
+        new_text_elem.attr.insert("fill".to_string(), "red".to_string());
+        svg_editor.update_text_elem_by_id(new_text_elem).unwrap();
+    }
+
+
 }

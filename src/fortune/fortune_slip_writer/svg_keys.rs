@@ -21,7 +21,7 @@ pub fn retrieve_svg_keys(
     svg_editor: &SvgEditor,
     fortune_categories: &[String],
 ) -> Result<Vec<SvgKeys>> {
-    let text_elems = svg_editor.get_text_elems_map_ordered();
+    let text_elems = svg_editor.get_text_elems_ordered();
 
     let elems_per_slip = text_elems.len() / NR_SLIPS_PER_PAGE;
 
