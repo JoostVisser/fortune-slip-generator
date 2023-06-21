@@ -10,6 +10,10 @@ jobs:
   test:
     name: Test Suite
     runs-on: ${{ matrix.os }}
+    env:
+      RELEASE_FLAG: ""
+      BUILD_FOLDER: "target/debug"
+      EXECUTABLE_NAME: "fortune_generator"
     strategy:
       matrix:
         os:
@@ -18,22 +22,16 @@ jobs:
       fail-fast: false
     steps:
       - uses: actions/checkout@v3
-      - name: Set environment variables
+      - name: Set variables for release
+        if: startsWith(github.ref, 'refs/tags/')
         run: |
-          if [ "${{runner.os}}" == "Windows" ]; then
-            echo "EXECUTABLE_NAME=fortune_generator.exe" >> $GITHUB_ENV
-          else
-            echo "EXECUTABLE_NAME=fortune_generator" >> $GITHUB_ENV
-          fi
-
-          if  [[ ${{github.ref}} == refs/tags/* ]]; then
-            echo "RELEASE_FLAG=--release" >> $GITHUB_ENV
-            echo "BUILD_FOLDER=target/release" >> $GITHUB_ENV
-          else
-            echo "RELEASE_FLAG=" >> $GITHUB_ENV
-            echo "BUILD_FOLDER=target/debug" >> $GITHUB_ENV
-          fi
-      - run: echo "Executable name... ${{ env.EXECUTABLE_NAME }}"
+          echo "RELEASE_FLAG=--release" >> $GITHUB_ENV
+          echo "RELEASE_FLAG=--release" >> $env:GITHUB_ENV
+          echo "BUILD_FOLDER=target/release" >> $GITHUB_ENV
+          echo "BUILD_FOLDER=target/release" >> $env:GITHUB_ENV
+      - name: Set variables for windows
+        if: runner.os == 'Windows'
+        run: echo "EXECUTABLE_NAME=fortune_generator.exe" >> $env:GITHUB_ENV
       - uses: dtolnay/rust-toolchain@stable
         with:
           components: llvm-tools-preview
