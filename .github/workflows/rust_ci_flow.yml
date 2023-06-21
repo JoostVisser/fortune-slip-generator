@@ -44,6 +44,17 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: codecov.json
           fail_ci_if_error: true
+      - name: Upload runnable
+        uses: actions/upload-artifact@v2
+        with:
+          name: development-build
+          path: target/debug/fortune_generator*
+      - name: Upload config files
+        if: runner.os == 'Linux'
+        uses: actions/upload-artifact@v2
+        with:
+          name: development-build
+          path: data/fortune_data/*
 
   fmt:
     name: Style checker
