@@ -164,9 +164,9 @@ mod tests {
         let text_elem = svg_editor.get_text_elems_ordered()[0];
         assert_eq!(text_elem.attr["fill"], "black");
         let mut new_text_elem = text_elem.clone();
-        new_text_elem.attr.insert("fill".to_string(), "red".to_string());
+        new_text_elem
+            .attr
+            .insert("fill".to_string(), "red".to_string());
         svg_editor.update_text_elem_by_id(new_text_elem).unwrap();
     }
-
-
 }
