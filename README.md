@@ -33,22 +33,22 @@ Moreover, when unfolding the slip, the fortune text is the first thing you see.
 
 ## Getting started
 The following needs to be installed on your system:
-1. InkScape
+1. Inkscape
 2. Fonts (the default template uses Dosis, Hina Mincho and Kaushan Script)
 
 ### Windows installation
 #### Step 1: Install Inkscape
 
-InkScape needs to be installed and added to your PATH. To do this:
+Inkscape needs to be installed and added to your PATH. To do this:
 1. Download the latest version of Inkscape: https://inkscape.org/release/
-2. During the installation, select to add InkScape to your path
+2. During the installation, select to add Inkscape to your path
 
 If you get an error (such as Path being too long), you can add Inkscape directory to
 your PATH manually:
 - Open the start menu and search for "Edit the system environment variables"
 - Select "Environment Variables"
 - Select "Path" under "System variables" and click on "Edit"
-- Select "New" and add the path to the Inkscape directory (e.g. `C:\Program Files\Inkscape\bin`)
+- Select "New" and add the path to Inkscape's `bin` directory (e.g. `C:\Program Files\Inkscape\bin`)
 
 #### Step 2: Install the fonts
 
@@ -58,17 +58,13 @@ To install the fonts:
 
 ### Linux installation
 
-We'll be showing the installation instructions for Ubuntu/Debian, but other distros should
-be similar.
+The installation instructions are for Ubuntu/Debian, but other distros should be similar.
 
-1. Install InkScape
-   - Use your package manager to install InkScape: `sudo apt install inkscape`
+1. Install Inkscape
+   - Use your package manager: `sudo apt install inkscape`
 2. Install Fonts
    - Open the fonts from the `fonts` directory
-   - Double-click on the font file and click on the "Install" button
-
-
-### How to use it
+   - Double-click on the font file and click "Install"
 
 
 

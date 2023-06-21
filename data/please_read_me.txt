@@ -9,15 +9,13 @@ Pre-requisites
 1. Inkscape needs to be installed
 2. Certains fonts need to be installed.
 
-Check the Github page with installation instructions:
+Check the Github page for installation instructions:
 https://github.com/JoostVisser/fortune-slip-generator#getting-started
-
 
 
 How to use
 ----------
 Double-click 'fortune_generator' (or 'fortune_generator.exe' on Windows)
-
 
 
 How to add your own fortunes
