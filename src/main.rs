@@ -11,7 +11,7 @@ mod svg;
 fn main() {
     pretty_env_logger::init();
 
-    let fortune_settings = "data/fortune_data/settings.yaml";
+    let fortune_settings = "data/fortune_data/fortune_settings.yaml";
     info!("Loading data from '{}'", fortune_settings);
     let a = FortuneGenerator::open(fortune_settings).unwrap();
 
