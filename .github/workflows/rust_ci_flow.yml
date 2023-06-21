@@ -13,6 +13,7 @@ jobs:
     env:
       RELEASE_FLAG: ""
       BUILD_FOLDER: "target/debug"
+      EXECUTABLE_NAME: "fortune_generator"
     strategy:
       matrix:
         os:
@@ -21,11 +22,14 @@ jobs:
       fail-fast: false
     steps:
       - uses: actions/checkout@v3
-      - name: Set release flag
+      - name: Set variables for release
         if: startsWith(github.ref, 'refs/tags/')
         run: |
           echo "RELEASE_FLAG=--release" >> $GITHUB_ENV
           echo "BUILD_FOLDER=target/release" >> $GITHUB_ENV
+      - name: Set variables for windows
+        if: runner.os == 'Windows'
+        run: echo "EXECUTABLE_NAME=fortune_generator.exe" >> $GITHUB_ENV
       - uses: dtolnay/rust-toolchain@stable
         with:
           components: llvm-tools-preview
@@ -59,7 +63,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: build-artifact
-          path: ${{ env.BUILD_FOLDER}}/fortune_generator*
+          path: ${{ env.BUILD_FOLDER}}/${{ env.EXECUTABLE_NAME }}
 
 
   fmt:
@@ -103,10 +107,6 @@ jobs:
       - run: cp fortune_generator release/linux
       - run: cp fortune_generator.exe release/windows
       - run: echo release/linux release/windows | xargs -n 1 cp -r data/fortune_data/*
-      - run: echo release/linux release/windows | xargs -n 1 cp -r data/fonts
-      - run: echo release/linux release/windows | xargs -n 1 cp -r data/figma_template
-      - run: tar -czf release/linux.tar.gz release/linux
-      - run: zip -r release/windows.zip release/windows
       - uses: actions/upload-artifact@v2
         with:
           name: build-artifact
@@ -134,12 +134,18 @@ jobs:
     needs: [upload_artifacts]
     steps:
       - uses: actions/checkout@v3
+      - run: mkdir -p release/linux release/windows
       - uses: actions/download-artifact@v2
         with:
           name: build-linux
+          path: release/linux/
       - uses: actions/download-artifact@v2
         with:
           name: build-windows
+          path: release/windows/
+      - run: echo release/linux release/windows | xargs -n 1 cp -r data/fonts
+      - run: tar -czf release/linux.tar.gz release/linux
+      - run: zip -r release/windows.zip release/windows
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
@@ -147,6 +153,7 @@ jobs:
             release/linux.tar.gz
             release/windows.zip
             CHANGELOG.md
+            data/figma_template/omikuji_template.fig
           tag_name: ${{ github.ref }}
           body_path: CHANGELOG.md
           draft: false
