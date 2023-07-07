@@ -6,10 +6,10 @@ You can print them out, cut them and fold them to create your very own fortune s
 
 Pre-requisites
 --------------
-1. Inkscape needs to be installed
+1. Inkscape needs to be installed and added to your PATH.
 2. Certains fonts need to be installed.
 
-Check the Github page for installation instructions:
+Check the Github page for more detailed installation instructions:
 https://github.com/JoostVisser/fortune-slip-generator#getting-started
 
 

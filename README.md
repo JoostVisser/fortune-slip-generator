@@ -71,10 +71,10 @@ The installation instructions are for Ubuntu/Debian, but other distros should be
 ## Configuration
 ### CLI options
 
-- `--interactive` - Run in interactive mode (default)
-- Output path
-- Output format (svg, pdf)
-- Settings path
+- `-o`, `--output` `<FILE>` — Path to the output PDF [default: fortune_slips.pdf]
+- `-c`, `--config` `<FILE>` — Custom path to the settings YAML file [default: fortune_settings.yaml]
+- `-s`, `--skip-checks` — Skip the prerequisites checks
+- `-h`, `--help` — Print help
 
 ### Changing the template
 

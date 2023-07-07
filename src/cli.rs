@@ -15,11 +15,11 @@ mod checks;
 #[derive(Parser, Debug)]
 #[command(author, version, about)]
 struct CliArgs {
-    /// Path to the output PDF. Defaults to 'fortune_slips.pdf'.
+    /// Path to the output PDF.
     #[arg(short, long, value_name = "FILE", default_value = DEFAULT_OUTPUT_PATH)]
     output: PathBuf,
 
-    /// Custom path to the settings YAML file. Defaults to 'fortune_settings.yaml'.
+    /// Custom path to the settings YAML file.
     #[arg(short, long, value_name = "FILE", default_value = DEFAULT_SETTINGS_PATH)]
     config: PathBuf,
 
