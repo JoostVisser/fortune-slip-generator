@@ -1,5 +1,7 @@
 [package]
 name = "fortune_generator"
+author = "Joost Visser"
+about = "Generates a PDF with a fortune slips"
 version = "0.2.0"
 edition = "2021"
 
@@ -25,8 +27,14 @@ anyhow = "1.0.71"
 tempfile = "3.6.0"
 xmltree = "0.10.3"
 rayon = "1.7.0"
-itertools = "0.10.5"
+itertools = "0.11.0"
 env_logger = "0.10.0"
 log = "0.4.19"
 pretty_env_logger = "0.5.0"
 maplit = "1.0.2"
+figlet-rs = "0.1.5"
+owo-colors = "3.5.0"
+which = "4.4.0"
+font-loader = "0.11.0"
+indoc = "2.0.2"
+clap = { version = "4.3.11", features = ["derive"] }

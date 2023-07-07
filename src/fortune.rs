@@ -18,7 +18,7 @@ use self::{
     fortune_splitter::{FortuneSlipTextRef, FortuneSplitter},
 };
 
-mod fortune_data;
+pub mod fortune_data;
 mod fortune_slip_writer;
 mod fortune_splitter;
 

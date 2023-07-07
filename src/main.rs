@@ -1,22 +1,30 @@
-use log::info;
+use owo_colors::OwoColorize;
 
 use crate::fortune::FortuneGenerator;
-
 pub mod fortune;
 
+mod cli;
 mod constants;
 mod pdf;
 mod svg;
+mod write_options;
 
 fn main() {
     pretty_env_logger::init();
 
-    let fortune_settings = "data/fortune_data/fortune_settings.yaml";
-    info!("Loading data from '{}'", fortune_settings);
-    let a = FortuneGenerator::open(fortune_settings).unwrap();
+    let write_options = cli::execute();
 
-    let output_pdf_path = "test.pdf";
-    info!("Generating fortune slips to '{}'...", output_pdf_path);
-    a.generate_to_pdf("test.pdf").unwrap();
-    info!("Done!");
+    println!("Generating fortunes...");
+    let fortune_generator = FortuneGenerator::open(&write_options.config_path).unwrap();
+
+    println!("Generating PDF...");
+    fortune_generator
+        .generate_to_pdf(&write_options.output_path)
+        .unwrap();
+
+    println!(
+        "{} PDF generated at '{}'",
+        "Success!".green().bold(),
+        write_options.output_path.display()
+    );
 }

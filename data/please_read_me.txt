@@ -1,4 +1,4 @@
-Welcome to the Fortune Generator.
+Welcome to the Fortune slips Generator!
 
 This is a simple program that will generate a PDF of fortunes.
 You can print them out, cut them and fold them to create your very own fortune slips!
@@ -15,7 +15,10 @@ https://github.com/JoostVisser/fortune-slip-generator#getting-started
 
 How to use
 ----------
-Double-click 'fortune_generator' (or 'fortune_generator.exe' on Windows)
+Ubuntu: Run `./fortune_generator` from the command line
+Windows: Double-click 'fortune_generator.exe'
+
+Help is available by running `./fortune_generator --help`
 
 
 How to add your own fortunes
