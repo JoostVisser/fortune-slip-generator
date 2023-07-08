@@ -152,7 +152,7 @@ jobs:
             data/figma_template/omikuji_template.fig
           tag_name: ${{ github.ref }}
           body_path: CHANGELOG.md
-          name: $GITHUB_REF_NAME
+          name: ${{ github.ref_name }}
           draft: false
           prerelease: false
           fail_on_unmatched_files: true

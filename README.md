@@ -5,10 +5,11 @@
 [![Rust CI](https://github.com/JoostVisser/fortune-slip-generator/actions/workflows/rust_ci_flow.yml/badge.svg)](https://github.com/JoostVisser/fortune-slip-generator/actions/workflows/rust_ci_flow.yml)
 [![codecov](https://codecov.io/github/JoostVisser/fortune-slip-generator/branch/main/graph/badge.svg?token=EJJM1S9F42)](https://codecov.io/github/JoostVisser/fortune-slip-generator)
 ![Copy-Paste badge](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/JoostVisser/4683758f6258e38bbe3169e5b315fdcc/raw/jscpd-badge.json)
+![GitHub release (with filter)](https://img.shields.io/github/v/release/JoostVisser/fortune-slip-generator?sort=semver&logo=github)
 
 With the Fortune Slip Generator, you can create your very own Fortune Slips!
 
-Download the fortune slip generator here: [![Releases](https://img.shields.io/github/v/release/:user/:repo?sort=semver&logo=github)](https://github.com/JoostVisser/fortune-slip-generator/releases)
+Get the latest version [here](https://github.com/JoostVisser/fortune-slip-generator/releases).
 
 A sample fortune slip looks like this:
 
