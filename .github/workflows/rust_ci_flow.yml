@@ -140,7 +140,7 @@ jobs:
           path: release/windows/fortune_generator
       - run: echo release/linux/fortune_generator release/windows/fortune_generator | xargs -n 1 cp -r data/fonts
       - run: echo release/linux/fortune_generator release/windows/fortune_generator | xargs -n 1 cp -r data/please_read_me.txt
-      - run: (cd release/linux; tar -cvf ../fortune_linux.tar.gz /fortune_generator)
+      - run: (cd release/linux; tar -cvf ../fortune_linux.tar.gz fortune_generator)
       - run: zip -rj release/fortune_windows.zip release/windows/fortune_generator
       - name: Release
         uses: softprops/action-gh-release@v1
