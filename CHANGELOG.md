@@ -6,4 +6,4 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
-- *(changelog)* Initial version of FortuneSlipGenerator
+- Initial version of FortuneSlipGenerator

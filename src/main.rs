@@ -1,3 +1,5 @@
+use std::process::Command;
+
 use owo_colors::OwoColorize;
 
 use crate::fortune::FortuneGenerator;
@@ -27,4 +29,10 @@ fn main() {
         "Success!".green().bold(),
         write_options.output_path.display()
     );
+
+    if cfg!(target_os = "windows") {
+        println!("");
+        println!("Press any key to exit...");
+        let _ = Command::new("cmd.exe").arg("/c").arg("pause").status();
+    }
 }

@@ -77,8 +77,10 @@ The installation instructions are for Ubuntu/Debian, but other distros should be
 ## Configuration
 ### CLI options
 
-- `-o`, `--output` `<FILE>` — Path to the output PDF [default: fortune_slips.pdf]
-- `-c`, `--config` `<FILE>` — Custom path to the settings YAML file [default: fortune_settings.yaml]
+The program works without any flags, but the following flags are available:
+
+- `-o`, `--output <FILE>` — Path to the output PDF [default: `fortune_slips.pdf`]
+- `-c`, `--config <FILE>` — Custom path to the settings YAML file [default: `fortune_settings.yaml`]
 - `-s`, `--skip-checks` — Skip the prerequisites checks
 - `-h`, `--help` — Print help
 
