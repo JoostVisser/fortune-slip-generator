@@ -11,6 +11,7 @@ use crate::{
 };
 
 mod checks;
+pub mod windows;
 
 #[derive(Parser, Debug)]
 #[command(author, version, about)]

@@ -6,7 +6,7 @@ use indoc::printdoc;
 use owo_colors::OwoColorize;
 use which::which;
 
-use crate::fortune::fortune_data::FortuneData;
+use crate::{fortune::fortune_data::FortuneData, cli::windows};
 
 const REQUIRED_FONTS: [&str; 3] = ["Dosis", "Hina Mincho", "Kaushan Script"];
 
@@ -35,6 +35,8 @@ pub fn check_prerequisites(config_path: &Path) {
             Exiting program, as not all prerequisites are met.
 
         ", url = "https://github.com/JoostVisser/fortune-slip-generator/blob/main/README.md"}
+
+        windows::press_a_key_to_continue_windows_only();
         exit(1);
     }
 }

@@ -1,8 +1,6 @@
-use std::process::Command;
-
 use owo_colors::OwoColorize;
 
-use crate::fortune::FortuneGenerator;
+use crate::{fortune::FortuneGenerator, cli::windows};
 pub mod fortune;
 
 mod cli;
@@ -30,9 +28,5 @@ fn main() {
         write_options.output_path.display()
     );
 
-    if cfg!(target_os = "windows") {
-        println!("");
-        println!("Press any key to exit...");
-        let _ = Command::new("cmd.exe").arg("/c").arg("pause").status();
-    }
+    windows::press_a_key_to_continue_windows_only();
 }
