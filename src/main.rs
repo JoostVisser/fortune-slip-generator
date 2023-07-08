@@ -1,6 +1,6 @@
 use owo_colors::OwoColorize;
 
-use crate::{fortune::FortuneGenerator, cli::windows};
+use crate::{cli::windows, fortune::FortuneGenerator};
 pub mod fortune;
 
 mod cli;

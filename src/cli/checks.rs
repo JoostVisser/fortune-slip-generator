@@ -6,7 +6,7 @@ use indoc::printdoc;
 use owo_colors::OwoColorize;
 use which::which;
 
-use crate::{fortune::fortune_data::FortuneData, cli::windows};
+use crate::{cli::windows, fortune::fortune_data::FortuneData};
 
 const REQUIRED_FONTS: [&str; 3] = ["Dosis", "Hina Mincho", "Kaushan Script"];
 
