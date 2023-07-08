@@ -33,7 +33,6 @@ pub fn check_prerequisites(config_path: &Path) {
             (Own risk: you can skip the checks with the `--skip-checks` flag.)
 
             Exiting program, as not all prerequisites are met.
-
         ", url = "https://github.com/JoostVisser/fortune-slip-generator/blob/main/README.md"}
 
         windows::press_a_key_to_continue_windows_only();
@@ -59,9 +58,12 @@ pub fn check_if_inkscape_is_installed() -> Result<()> {
 pub fn check_if_fonts_are_installed() -> Result<()> {
     let sysfonts = system_fonts::query_all();
 
-    for font in REQUIRED_FONTS.iter() {
-        if !sysfonts.contains(&font.to_string()) {
-            bail!("Font '{}' is not installed.", font);
+    for required_font in &REQUIRED_FONTS {
+        if !sysfonts
+            .iter()
+            .any(|sysfont| sysfont.contains(required_font))
+        {
+            bail!("Font '{}' is not installed.", required_font);
         }
     }
 
