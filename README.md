@@ -8,6 +8,8 @@
 
 With the Fortune Slip Generator, you can create your very own Fortune Slips!
 
+Download the fortune slip generator here: [![Releases](https://img.shields.io/github/v/release/:user/:repo?sort=semver&logo=github)](https://github.com/JoostVisser/fortune-slip-generator/releases)
+
 A sample fortune slip looks like this:
 
 <div align="center">
@@ -32,6 +34,9 @@ Moreover, when unfolding the slip, the fortune text is the first thing you see.
 
 
 ## Getting started
+You can download the latest release from the [releases
+page](https://github.com/JoostVisser/fortune-slip-generator/releases)
+
 The following needs to be installed on your system:
 1. Inkscape
 2. Fonts (the default template uses Dosis, Hina Mincho and Kaushan Script)
@@ -60,8 +65,8 @@ To install the fonts:
 
 The installation instructions are for Ubuntu/Debian, but other distros should be similar.
 
-1. Install Inkscape
-   - Use your package manager: `sudo apt install inkscape`
+1. Install dependencies:
+   `sudo apt install inkscape libfontconfig libfontconfig1-dev`
 2. Install Fonts
    - Open the fonts from the `fonts` directory
    - Double-click on the font file and click "Install"
