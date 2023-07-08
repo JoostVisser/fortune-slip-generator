@@ -28,6 +28,7 @@ struct CliArgs {
     skip_checks: bool,
 }
 
+/// Parses the CLI arguments and returns the write options.
 pub fn execute() -> WriteOptions {
     let cli = CliArgs::parse();
     print_logo();
@@ -43,7 +44,7 @@ pub fn execute() -> WriteOptions {
     }
 }
 
-pub fn print_logo() {
+fn print_logo() {
     let standard_font = FIGfont::standard().unwrap();
     let figure = standard_font.convert("Fortune  slips").unwrap();
     println!("{}", figure.bold());

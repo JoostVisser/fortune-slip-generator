@@ -34,12 +34,6 @@ impl FortuneGenerator {
     }
 
     /// Writes the fortunes to target PDF file.
-    ///
-    /// Example:
-    /// ```
-    /// let fortune_generator = FortuneGenerator::open("test_utils/data/fortune_settings.yaml")?;
-    /// fortune_generator.generate_to_pdf("test.pdf")?;
-    /// ```
     pub fn generate_to_pdf(&self, pdf_path: impl AsRef<Path>) -> Result<()> {
         if pdf_path.as_ref().is_dir() {
             bail!("The path to write the PDF file cannot be a directory");
@@ -103,7 +97,7 @@ impl FortuneGenerator {
         let mut all_pdf_paths =
             intersperse(front_pdf_paths, backside_pdf_path.clone()).collect::<Vec<_>>();
         all_pdf_paths.push(backside_pdf_path);
-        merge_pdf::merge_pdf(&all_pdf_paths, pdf_path)
+        merge_pdf(&all_pdf_paths, pdf_path)
     }
 
     fn save_fortunes_to_svg(
