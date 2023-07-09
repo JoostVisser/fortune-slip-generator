@@ -1,7 +1,5 @@
 # Fortune Slip Generator
 
-> :construction: The project is still under development. :construction:
-
 [![Rust CI](https://github.com/JoostVisser/fortune-slip-generator/actions/workflows/rust_ci_flow.yml/badge.svg)](https://github.com/JoostVisser/fortune-slip-generator/actions/workflows/rust_ci_flow.yml)
 [![codecov](https://codecov.io/github/JoostVisser/fortune-slip-generator/branch/main/graph/badge.svg?token=EJJM1S9F42)](https://codecov.io/github/JoostVisser/fortune-slip-generator)
 ![Copy-Paste badge](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/JoostVisser/4683758f6258e38bbe3169e5b315fdcc/raw/jscpd-badge.json)
