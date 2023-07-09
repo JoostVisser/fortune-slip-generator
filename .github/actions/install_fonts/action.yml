@@ -14,11 +14,7 @@ runs:
       $SourceDir   = "${{ inputs.fonts-folder }}"
       $Destination = (New-Object -ComObject Shell.Application).Namespace(0x14)
 
-      echo "Installing fonts from $SourceDir"
-
-      Get-ChildItem -Path $SourceDir -Directory | ForEach-Object { Write-Host $_.FullName }
-
-      Get-ChildItem -Path $SourceDir -Include '*.ttf','*.ttc','*.otf' -Recurse | ForEach {
+      Get-ChildItem -Path $SourceDir -Include '*.ttf','*.ttc','*.otf' -Exclude "*VariableFont*" -Recurse | ForEach {
           echo "Installing $($_.FullName)"
           # Install font
           $Destination.CopyHere($_.FullName,0x10)
