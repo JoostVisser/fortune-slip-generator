@@ -63,7 +63,7 @@ jobs:
       - name: Build executable (${{ env.BUILD_FOLDER }})
         run: cargo build --verbose ${{ env.RELEASE_FLAG }}
       - name: Upload executable
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: binary
           path: ${{ env.BUILD_FOLDER}}/${{ env.EXECUTABLE_NAME }}
@@ -102,18 +102,18 @@ jobs:
     needs: [fmt, test]
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v3
         with:
           name: binary
       - run: mkdir -p release/linux release/windows
       - run: cp fortune_generator release/linux
       - run: cp fortune_generator.exe release/windows
       - run: echo release/linux release/windows | xargs -n 1 cp -r data/fortune_data/*
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         with:
           name: build-linux
           path: release/linux
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         with:
           name: build-windows
           path: release/windows
@@ -135,15 +135,15 @@ jobs:
       - uses: actions/download-artifact@v2
         with:
           name: build-linux
-          path: release/linux/${{ env.FOLDER_NAME}}
+          path: release/linux/${{ env.FOLDER_NAME}}/
       - uses: actions/download-artifact@v2
         with:
           name: build-windows
-          path: release/windows/fortune_generator
-      - run: cp -r data/fonts release/linux/${{ env.FOLDER_NAME}}
-      - run: cp -r data/fonts release/windows/${{ env.FOLDER_NAME}}
-      - run: cp -r data/please_read_me.txt release/linux/${{ env.FOLDER_NAME}}
-      - run: cp -r data/please_read_me.txt release/windows/${{ env.FOLDER_NAME}}
+          path: release/windows/${{ env.FOLDER_NAME}}/
+      - run: cp -r data/fonts release/linux/${{ env.FOLDER_NAME}}/
+      - run: cp -r data/fonts release/windows/${{ env.FOLDER_NAME}}/
+      - run: cp -r data/please_read_me.txt release/linux/${{ env.FOLDER_NAME}}/
+      - run: cp -r data/please_read_me.txt release/windows/${{ env.FOLDER_NAME}}/
       - run: (cd release/linux; tar -cvf ../${{ env.LINUX_TAR }} ${{ env.FOLDER_NAME}} )
       - run: (cd release/windows; zip -r ../${{ env.WINDOWS_ZIP }} ${{ env.FOLDER_NAME}} )
       - name: Release
