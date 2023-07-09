@@ -57,10 +57,6 @@ pub fn check_if_inkscape_is_installed() -> Result<()> {
 }
 
 pub fn check_if_fonts_are_installed() -> Result<()> {
-    if cfg!(test) {
-        return Ok(());
-    }
-
     let sysfonts = system_fonts::query_all();
 
     for required_font in &REQUIRED_FONTS {
