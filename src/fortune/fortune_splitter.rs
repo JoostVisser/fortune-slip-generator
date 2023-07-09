@@ -33,6 +33,19 @@ impl<'a> FortuneSplitter<'a> {
     /// The factory creates as many slips as possible without duplication by finding
     /// for every luck level the topic with the least fortunes.
     ///
+    /// Example:
+    /// ```
+    /// # use anyhow::Ok;
+    /// use fortune_generator::fortune_data::FortuneData;
+    /// use fortune_generator::fortune_splitter::FortuneSplitter;
+    ///
+    /// let fortune_data = FortuneData::open("test_utils/data/fortune_settings.yaml")?;
+    /// let fortune_splitter = FortuneSplitter::new(&fortune_data);
+    /// let fortune_slips = fortune_splitter.shuffle_and_split()?;
+    ///
+    /// assert_eq!(fortune_slips.len(), 5);
+    /// assert_eq!(fortune_slips[0].category_to_fortune.len(), 3);
+    /// # Ok(())
     pub fn shuffle_and_split(&self) -> Result<Vec<FortuneSlipTextRef<'a>>> {
         let luck_level_keys = self.fortune_data.get_luck_level_keys();
 

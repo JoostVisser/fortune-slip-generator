@@ -1,5 +1,6 @@
 use std::path::PathBuf;
 
+use anyhow::Result;
 use clap::{command, Parser};
 use figlet_rs::FIGfont;
 use owo_colors::OwoColorize;
@@ -33,16 +34,16 @@ pub struct CliArgs {
 }
 
 /// Parses the CLI arguments and returns the write options.
-pub fn execute() -> CliArgs {
+pub fn execute() -> Result<CliArgs> {
     let cli = CliArgs::parse();
     print_logo();
     println!("Welcome to the fortune slips generator!");
     println!();
     if !cli.skip_checks {
-        check_prerequisites(&cli.config);
+        check_prerequisites(&cli.config)?;
     }
 
-    cli
+    Ok(cli)
 }
 
 fn print_logo() {

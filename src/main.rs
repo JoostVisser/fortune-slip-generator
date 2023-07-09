@@ -1,39 +1,19 @@
-use std::env;
-
-use owo_colors::OwoColorize;
-
-use crate::{cli::windows, fortune::FortuneGenerator};
-pub mod fortune;
-
-mod cli;
-mod constants;
-mod pdf;
-mod svg;
+use fortune_generator::{error::Error, run};
 
 fn main() {
-    let cli_args = cli::execute();
+    let result = run();
 
-    if cli_args.verbose {
-        enable_logging();
+    if let Err(error) = result {
+        match error {
+            Error::ChecksFailed => std::process::exit(1),
+            Error::FortuneSettingsLoadFailure(msg) => {
+                println!("Fortune settings load failure: {}", msg);
+                std::process::exit(2)
+            }
+            Error::PdfGenerateFailure(msg) => {
+                println!("PDF generate failure: {}", msg);
+                std::process::exit(3)
+            }
+        }
     }
-
-    println!("Generating fortunes...");
-    let fortune_generator = FortuneGenerator::open(&cli_args.config).unwrap();
-
-    println!("Generating PDF...");
-    fortune_generator.generate_to_pdf(&cli_args.output).unwrap();
-
-    println!();
-    println!(
-        "{} PDF generated at '{}'",
-        "Success!".green().bold(),
-        &cli_args.output.display()
-    );
-
-    windows::press_a_key_to_continue_windows_only();
-}
-
-fn enable_logging() {
-    env::set_var("RUST_LOG", "DEBUG");
-    pretty_env_logger::init();
 }

@@ -20,13 +20,14 @@ use self::{
 
 pub mod fortune_data;
 mod fortune_slip_writer;
-mod fortune_splitter;
+pub mod fortune_splitter;
 
 pub struct FortuneGenerator {
     fortune_data: FortuneData,
 }
 
 impl FortuneGenerator {
+    /// Opens the fortune settings file and returns a `FortuneGenerator` instance.
     pub fn open(settings_yaml_path: impl AsRef<Path>) -> Result<FortuneGenerator> {
         let fortune_data = FortuneData::open(settings_yaml_path)?;
 
@@ -34,6 +35,18 @@ impl FortuneGenerator {
     }
 
     /// Writes the fortunes to target PDF file.
+    ///
+    /// Example:
+    /// ```
+    /// # use anyhow::Ok;
+    /// use fortune_generator::fortune::FortuneGenerator;
+    ///
+    /// let fortune_gen = FortuneGenerator::open("test_utils/data/fortune_settings.yaml")?;
+    /// fortune_gen.generate_to_pdf("output.pdf"); // Writes the fortunes to output.pdf
+    /// # std::fs::remove_file("output.pdf").unwrap();
+    /// # Ok(())
+    /// ```
+    ///
     pub fn generate_to_pdf(&self, pdf_path: impl AsRef<Path>) -> Result<()> {
         if pdf_path.as_ref().is_dir() {
             bail!("The path to write the PDF file cannot be a directory");
@@ -48,24 +61,6 @@ impl FortuneGenerator {
         let backside_pdf_path = self.generate_backside_pdf(temp_dir.path())?;
 
         Self::intersperse_and_merge_pdfs(front_pdf_paths, backside_pdf_path, pdf_path)
-    }
-
-    /// Writes the fortunes to a folder as SVG files.
-    /// Since only 4 slips fit on a page, every 4 slips will generate a new SVG file.
-    ///
-    /// Returns:
-    ///     A vector of the paths to the SVG files.
-    pub fn generate_to_svg_dir(&self, svg_dir: impl AsRef<Path>) -> Result<Vec<SvgFile>> {
-        let svg_dir = svg_dir.as_ref();
-
-        if !svg_dir.is_dir() {
-            bail!("The path to write the SVG files to is not a directory, but a file")
-        }
-
-        let fortunes = self.get_random_fortunes()?;
-        let svg_paths = self.save_fortunes_to_svg(&fortunes, svg_dir)?;
-
-        Ok(svg_paths)
     }
 
     fn get_random_fortunes(&self) -> Result<Vec<FortuneSlipTextRef>> {
@@ -198,40 +193,9 @@ mod tests {
     }
 
     #[rstest]
-    fn test_generate_to_svg_dir(fortune_generator: FortuneGenerator) -> Result<()> {
-        let temp_dir = tempfile::tempdir()?;
-        let svg_paths = fortune_generator.generate_to_svg_dir(temp_dir.path())?;
-
-        let paths = fs::read_dir(temp_dir.path())?;
-
-        let mut nr_svg_files = 0;
-        for path in paths {
-            let path_buf = path?.path();
-            assert_eq!(path_buf.extension().unwrap(), "svg");
-            let svg_file = SvgFile::new(&path_buf)?;
-            assert!(svg_paths.contains(&svg_file));
-            assert_eq!(path_buf.parent().unwrap(), temp_dir.path());
-
-            nr_svg_files += 1;
-        }
-        assert_eq!(nr_svg_files, 2);
-
-        Ok(())
-    }
-
-    #[rstest]
     fn test_generate_to_pdf_folder_error(fortune_generator: FortuneGenerator) {
         let temp_dir = tempfile::tempdir().unwrap();
         let generation_result = fortune_generator.generate_to_pdf(temp_dir.path());
-
-        assert!(generation_result.is_err());
-    }
-
-    #[rstest]
-    fn test_generate_to_svg_file_error(fortune_generator: FortuneGenerator) {
-        let temp_dir = tempfile::tempdir().unwrap();
-        let svg_path = temp_dir.path().join("fortunes.svg");
-        let generation_result = fortune_generator.generate_to_svg_dir(svg_path);
 
         assert!(generation_result.is_err());
     }
