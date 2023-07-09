@@ -36,16 +36,15 @@ jobs:
         with:
           components: llvm-tools-preview
       - uses: Swatinem/rust-cache@v2
+      - uses: ./.github/actions/install_fonts
+        with:
+          fonts-folder: data/fonts
       - uses: ./.github/actions/install_inkscape
       - run: inkscape --help
       - name: Install LLVM Cov
         uses: taiki-e/install-action@cargo-llvm-cov
       - name: Install nextest
         uses: taiki-e/install-action@nextest
-      - name: Install fonts
-        run: |
-          cp -r data/fonts ~/.local/share/fonts
-          fc-cache -f -v
       - name: Run tests
         run: >
           cargo llvm-cov nextest

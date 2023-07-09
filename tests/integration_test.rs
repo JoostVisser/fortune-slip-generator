@@ -17,7 +17,6 @@ fn cleanup() {
     }
 }
 
-#[cfg(not(target_os = "windows"))]
 #[rstest]
 fn test_cli_with_correct_config(mut cmd: Command) {
     cmd.arg("--config")
@@ -28,7 +27,6 @@ fn test_cli_with_correct_config(mut cmd: Command) {
     cleanup();
 }
 
-#[cfg(not(target_os = "windows"))]
 #[rstest]
 fn test_cli_with_correct_config_and_custom_output(mut cmd: Command) {
     cmd.arg("--config")
@@ -42,13 +40,11 @@ fn test_cli_with_correct_config_and_custom_output(mut cmd: Command) {
     fs::remove_file("custom_output.pdf").unwrap();
 }
 
-#[cfg(not(target_os = "windows"))]
 #[rstest]
 fn test_cli_default_should_fail(mut cmd: Command) {
     assert_cmd_and_ok_x(&mut cmd, 2, 1);
 }
 
-#[cfg(not(target_os = "windows"))]
 #[rstest]
 fn test_cli_with_non_existing_config_should_fail(mut cmd: Command) {
     cmd.arg("--config")
@@ -57,7 +53,6 @@ fn test_cli_with_non_existing_config_should_fail(mut cmd: Command) {
     assert_cmd_and_ok_x(&mut cmd, 2, 1);
 }
 
-#[cfg(not(target_os = "windows"))]
 #[rstest]
 fn test_cli_with_invalid_config_should_fail(mut cmd: Command) {
     cmd.arg("--config")
@@ -82,7 +77,6 @@ fn test_cli_skip_checks(mut cmd: Command) {
     cleanup();
 }
 
-#[cfg(not(target_os = "windows"))]
 #[rstest]
 fn test_cli_verbose(mut cmd: Command) {
     cmd.arg("--verbose")
