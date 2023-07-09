@@ -131,11 +131,11 @@ jobs:
     needs: [upload_artifacts]
     steps:
       - uses: actions/checkout@v3
-      - run: mkdir -p release/linux/fortune_generator release/windows/fortune_generator
+      - run: mkdir -p release/linux/${{ env.FOLDER_NAME}} release/windows/${{ env.FOLDER_NAME}}
       - uses: actions/download-artifact@v2
         with:
           name: build-linux
-          path: release/linux/fortune_generator
+          path: release/linux/${{ env.FOLDER_NAME}}
       - uses: actions/download-artifact@v2
         with:
           name: build-windows
