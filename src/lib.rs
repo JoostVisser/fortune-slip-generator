@@ -8,7 +8,7 @@
 //! # use anyhow::Ok;
 //! use fortune_generator::FortuneGenerator;
 //!
-//! let fortune_gen = FortuneGenerator::open("fortune_settings.yaml")?;
+//! let fortune_gen = FortuneGenerator::open("data/fortune_data/fortune_settings.yaml")?;
 //! fortune_gen.generate_to_pdf("fortune_slips.pdf")?; // Generates a PDF with fortune slips
 //! # std::fs::remove_file("fortune_slips.pdf")?;
 //! # Ok(())
