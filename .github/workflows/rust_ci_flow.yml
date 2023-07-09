@@ -124,6 +124,8 @@ jobs:
     name: Release
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/')
+    env:
+      FOLDER_NAME: "fortune_generator-${{ github.ref_name }}"
     permissions:
       contents: write
     needs: [upload_artifacts]
@@ -138,17 +140,18 @@ jobs:
         with:
           name: build-windows
           path: release/windows/fortune_generator
-      - run: echo release/linux/fortune_generator release/windows/fortune_generator | xargs -n 1 cp -r data/fonts
-      - run: echo release/linux/fortune_generator release/windows/fortune_generator | xargs -n 1 cp -r data/please_read_me.txt
-      - run: (cd release/linux; tar -cvf ../fortune_linux.tar.gz fortune_generator)
-      - run: (cd release/windows; zip -r ../fortune_windows.zip fortune_generator)
+      - run: cp -r data/fonts release/linux/$FOLDER_NAME
+      - run: cp -r data/fonts release/windows/$FOLDER_NAME
+      - run: cp -r data/please_read_me.txt release/linux/$FOLDER_NAME
+      - run: cp -r data/please_read_me.txt release/windows/$FOLDER_NAME
+      - run: (cd release/linux; tar -cvf ../fortune_linux.tar.gz $FOLDER_NAME
+      - run: (cd release/windows; zip -r ../fortune_windows.zip $FOLDER_NAME
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
           files: |
             release/fortune_linux.tar.gz
             release/fortune_windows.zip
-            CHANGELOG.md
             data/figma_template/omikuji_template.fig
           tag_name: ${{ github.ref }}
           body_path: CHANGELOG.md
