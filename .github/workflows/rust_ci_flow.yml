@@ -48,7 +48,6 @@ jobs:
           cargo llvm-cov test
           --no-fail-fast
           --verbose
-          --ensure-time 60
           --codecov
           --output-path codecov.json
           ${{ env.RELEASE_FLAG }}
