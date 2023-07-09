@@ -46,6 +46,7 @@ impl<'a> FortuneSplitter<'a> {
     /// assert_eq!(fortune_slips.len(), 5);
     /// assert_eq!(fortune_slips[0].category_to_fortune.len(), 3);
     /// # Ok(())
+    /// ```
     pub fn shuffle_and_split(&self) -> Result<Vec<FortuneSlipTextRef<'a>>> {
         let luck_level_keys = self.fortune_data.get_luck_level_keys();
 

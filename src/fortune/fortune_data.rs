@@ -51,6 +51,7 @@ impl FortuneData {
     /// assert_eq!(fortune_texts[0], "The weather will cause sickness to spread around.");
     /// assert_eq!(fortune_texts[1], "Energy levels will be low for the coming week.");
     /// # Ok(())
+    /// ```
     pub fn get_fortune_text(&self, category: &str, luck_level_key: &str) -> Option<Vec<&String>> {
         Some(
             self.fortune_data_inner
@@ -74,6 +75,7 @@ impl FortuneData {
     ///
     /// assert!(categories.contains(&&"health".to_string()));
     /// # Ok(())
+    /// ```
     pub fn get_categories(&self) -> Vec<&String> {
         self.fortune_data_inner
             .fortunes_per_category
@@ -93,6 +95,7 @@ impl FortuneData {
     ///
     /// assert!(luck_level_keys.contains(&&"bad_luck".to_string()));
     /// # Ok(())
+    /// ```
     pub fn get_luck_level_keys(&self) -> Vec<&String> {
         self.fortune_data_inner
             .settings
