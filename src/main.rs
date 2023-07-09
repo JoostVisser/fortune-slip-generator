@@ -1,3 +1,5 @@
+use std::env;
+
 use owo_colors::OwoColorize;
 
 use crate::{cli::windows, fortune::FortuneGenerator};
@@ -7,26 +9,30 @@ mod cli;
 mod constants;
 mod pdf;
 mod svg;
-mod write_options;
 
 fn main() {
-    pretty_env_logger::init();
+    let cli_args = cli::execute();
 
-    let write_options = cli::execute();
+    if cli_args.verbose {
+        enable_logging();
+    }
 
     println!("Generating fortunes...");
-    let fortune_generator = FortuneGenerator::open(&write_options.config_path).unwrap();
+    let fortune_generator = FortuneGenerator::open(&cli_args.config).unwrap();
 
     println!("Generating PDF...");
-    fortune_generator
-        .generate_to_pdf(&write_options.output_path)
-        .unwrap();
+    fortune_generator.generate_to_pdf(&cli_args.output).unwrap();
 
     println!(
         "{} PDF generated at '{}'",
         "Success!".green().bold(),
-        write_options.output_path.display()
+        &cli_args.output.display()
     );
 
     windows::press_a_key_to_continue_windows_only();
+}
+
+fn enable_logging() {
+    env::set_var("RUST_LOG", "DEBUG");
+    pretty_env_logger::init();
 }

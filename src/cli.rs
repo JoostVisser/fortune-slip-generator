@@ -7,7 +7,6 @@ use owo_colors::OwoColorize;
 use crate::{
     cli::checks::check_prerequisites,
     constants::{DEFAULT_OUTPUT_PATH, DEFAULT_SETTINGS_PATH},
-    write_options::WriteOptions,
 };
 
 mod checks;
@@ -15,22 +14,26 @@ pub mod windows;
 
 #[derive(Parser, Debug)]
 #[command(author, version, about)]
-struct CliArgs {
+pub struct CliArgs {
     /// Path to the output PDF.
     #[arg(short, long, value_name = "FILE", default_value = DEFAULT_OUTPUT_PATH)]
-    output: PathBuf,
+    pub output: PathBuf,
 
     /// Custom path to the settings YAML file.
     #[arg(short, long, value_name = "FILE", default_value = DEFAULT_SETTINGS_PATH)]
-    config: PathBuf,
+    pub config: PathBuf,
 
     /// Skip the prerequisites checks.
     #[arg(short, long)]
-    skip_checks: bool,
+    pub skip_checks: bool,
+
+    /// Print logs to the console.
+    #[arg(short, long)]
+    pub verbose: bool,
 }
 
 /// Parses the CLI arguments and returns the write options.
-pub fn execute() -> WriteOptions {
+pub fn execute() -> CliArgs {
     let cli = CliArgs::parse();
     print_logo();
     println!("Welcome to the fortune slips generator!");
@@ -39,10 +42,7 @@ pub fn execute() -> WriteOptions {
         check_prerequisites(&cli.config);
     }
 
-    WriteOptions {
-        output_path: cli.output,
-        config_path: cli.config,
-    }
+    cli
 }
 
 fn print_logo() {
