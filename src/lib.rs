@@ -6,15 +6,13 @@
 //! ## Usage
 //! ```rust
 //! # use anyhow::Ok;
-//! use fortune_slips_generator::FortuneGenerator;
+//! use fortune_generator::FortuneGenerator;
 //!
 //! let fortune_gen = FortuneGenerator::open("fortune_settings.yaml")?;
 //! fortune_gen.generate_to_pdf("fortune_slips.pdf")?; // Generates a PDF with fortune slips
 //! # std::fs::remove_file("fortune_slips.pdf")?;
-//! # Ok::<(), anyhow::Error>(())
+//! # Ok(())
 //! ```
-//!
-
 use std::env;
 
 use owo_colors::OwoColorize;

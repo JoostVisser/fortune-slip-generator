@@ -43,14 +43,12 @@ jobs:
       - run: inkscape --help
       - name: Install LLVM Cov
         uses: taiki-e/install-action@cargo-llvm-cov
-      - name: Install nextest
-        uses: taiki-e/install-action@nextest
       - name: Run tests
         run: >
-          cargo llvm-cov nextest
+          cargo llvm-cov test
           --no-fail-fast
           --verbose
-          --profile ci
+          --ensure-time 60
           --codecov
           --output-path codecov.json
           ${{ env.RELEASE_FLAG }}
