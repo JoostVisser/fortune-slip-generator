@@ -23,6 +23,7 @@ fn main() {
     println!("Generating PDF...");
     fortune_generator.generate_to_pdf(&cli_args.output).unwrap();
 
+    println!();
     println!(
         "{} PDF generated at '{}'",
         "Success!".green().bold(),

@@ -1,4 +1,4 @@
-use std::path::Path;
+use std::{collections::HashMap, path::Path};
 
 use crate::{
     constants::NR_SLIPS_PER_PAGE,
@@ -73,12 +73,43 @@ impl FortuneSlipWriter {
     }
 
     pub fn write_page(&mut self, fortune_texts: &[FortuneSlipTextRef]) -> Result<()> {
+        if fortune_texts.len() > NR_SLIPS_PER_PAGE {
+            bail!("Too many fortune texts for one page");
+        }
+
         for (idx, fortune_text) in fortune_texts.iter().enumerate() {
             self.write_to_slip(idx, fortune_text)?;
+        }
 
-            if idx > NR_SLIPS_PER_PAGE {
-                bail!("Too many fortune texts for one page");
-            }
+        if fortune_texts.len() < NR_SLIPS_PER_PAGE {
+            self.write_empty_fortunes(fortune_texts.len())?;
+        }
+
+        Ok(())
+    }
+
+    fn write_empty_fortunes(&mut self, start_idx: usize) -> Result<()> {
+        let empty_string = "".to_string();
+
+        let empty_keys = self.svg_keys_all_slips[0]
+            .cat_to_fortune_keys
+            .keys()
+            .cloned()
+            .collect::<Vec<String>>();
+
+        let category_to_fortune = empty_keys
+            .iter()
+            .map(|category| (category, &empty_string))
+            .collect::<HashMap<&String, &String>>();
+
+        let empty_fortune = FortuneSlipTextRef {
+            header: "",
+            luck_level: "",
+            category_to_fortune,
+        };
+
+        for idx in start_idx..NR_SLIPS_PER_PAGE {
+            self.write_to_slip(idx, &empty_fortune)?;
         }
 
         Ok(())

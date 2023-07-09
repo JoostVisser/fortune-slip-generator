@@ -62,7 +62,7 @@ fn execute_inkscape_command(
 
 #[cfg(test)]
 mod tests {
-    use std::process::Command;
+    use std::process::{Command, Stdio};
 
     use super::svg_to_pdf;
     const SVG_EXAMPLE: &str = "<svg height='100' width='100'>
@@ -97,6 +97,8 @@ mod tests {
     fn simple_inkscape_test() {
         let result = Command::new("inkscape")
             .arg("--help")
+            .stdout(Stdio::piped())
+            .stderr(Stdio::piped())
             .status()
             .expect("Failed to execute process");
         assert!(result.success());

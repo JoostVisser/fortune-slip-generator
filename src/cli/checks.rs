@@ -6,7 +6,7 @@ use indoc::printdoc;
 use owo_colors::OwoColorize;
 use which::which;
 
-use crate::{cli::windows, fortune::fortune_data::FortuneData};
+use crate::{cli::windows, constants::EXIT_CODE_ERROR, fortune::fortune_data::FortuneData};
 
 const REQUIRED_FONTS: [&str; 3] = ["Dosis", "Hina Mincho", "Kaushan Script"];
 
@@ -26,9 +26,10 @@ pub fn check_prerequisites(config_path: &Path) {
 
     print_prerequisite("3. Fortune settings are valid", &fortune_settings_check);
 
+    println!();
+
     if inkscape_check.is_err() || fonts_check.is_err() || fortune_settings_check.is_err() {
         printdoc! {"
-
             For installation details, check: {url}
             (Own risk: you can skip the checks with the `--skip-checks` flag.)
 
@@ -36,7 +37,7 @@ pub fn check_prerequisites(config_path: &Path) {
         ", url = "https://github.com/JoostVisser/fortune-slip-generator/blob/main/README.md"}
 
         windows::press_a_key_to_continue_windows_only();
-        exit(1);
+        exit(EXIT_CODE_ERROR);
     }
 }
 

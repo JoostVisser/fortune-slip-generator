@@ -1,0 +1,14 @@
+---
+luck_levels:
+  good_luck:
+    jap: 中吉
+    eng: Good Luck
+  bad_luck:
+    jap: 凶
+    eng: Bad Luck
+
+fortune_content_files:
+  - fortune_text/does_not_exist.yaml
+
+template_front: fortune_template/omikuji_frontside_test.svg
+template_back: fortune_template/omikuji_backside_long.svg

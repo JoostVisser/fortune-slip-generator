@@ -40,6 +40,8 @@ impl FortuneGenerator {
         }
 
         let fortunes = self.get_random_fortunes()?;
+        println!("Writing {} fortunes...", fortunes.len());
+
         let temp_dir = tempdir()?;
 
         let front_pdf_paths = self.generate_pdf_fortunes(temp_dir.path(), fortunes)?;

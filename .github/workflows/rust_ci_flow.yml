@@ -67,7 +67,6 @@ jobs:
           name: binary
           path: ${{ env.BUILD_FOLDER}}/${{ env.EXECUTABLE_NAME }}
 
-
   fmt:
     name: Style checker
     runs-on: ubuntu-latest
@@ -118,8 +117,6 @@ jobs:
           name: build-windows
           path: release/windows
 
-
-
   release:
     name: Release
     runs-on: ubuntu-latest
@@ -146,8 +143,8 @@ jobs:
       - run: cp -r data/fonts release/windows/${{ env.FOLDER_NAME}}
       - run: cp -r data/please_read_me.txt release/linux/${{ env.FOLDER_NAME}}
       - run: cp -r data/please_read_me.txt release/windows/${{ env.FOLDER_NAME}}
-      - run: (cd release/linux; tar -cvf ../${{ env.LINUX_TAR }} ${{ env.FOLDER_NAME}}
-      - run: (cd release/windows; zip -r ../${{ env.WINDOWS_ZIP }} ${{ env.FOLDER_NAME}}
+      - run: (cd release/linux; tar -cvf ../${{ env.LINUX_TAR }} ${{ env.FOLDER_NAME}} )
+      - run: (cd release/windows; zip -r ../${{ env.WINDOWS_ZIP }} ${{ env.FOLDER_NAME}} )
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
