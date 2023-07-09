@@ -144,7 +144,7 @@ impl FortuneGenerator {
 
 #[cfg(test)]
 mod tests {
-    use std::{fs, path::Path};
+    use std::path::Path;
 
     use anyhow::Result;
     use lopdf::Document;
@@ -152,7 +152,7 @@ mod tests {
     use rstest::{fixture, rstest};
     use tempfile::tempdir;
 
-    use crate::{fortune::FortuneGenerator, svg::svg_file::SvgFile};
+    use crate::fortune::FortuneGenerator;
 
     #[fixture]
     fn fortune_generator() -> FortuneGenerator {
