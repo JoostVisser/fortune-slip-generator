@@ -51,6 +51,8 @@ jobs:
           --codecov
           --output-path codecov.json
           ${{ env.RELEASE_FLAG }}
+      - name: Run doctests
+        run: cargo test --doc --verbose ${{ env.RELEASE_FLAG }}
       - name: Upload coverage to Codecov
         if: runner.os == 'Linux'
         uses: codecov/codecov-action@v3
