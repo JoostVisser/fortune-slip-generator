@@ -5,8 +5,8 @@ runs:
   using: "composite"
   steps:
   - if: runner.os == 'Windows'
+    shell: bash
     run: choco install inkscape
-    shell: bash
   - if: runner.os == 'Linux'
-    run: sudo apt install inkscape
     shell: bash
+    run: sudo apt install inkscape

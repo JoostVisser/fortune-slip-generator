@@ -9,17 +9,18 @@ runs:
   using: "composite"
   steps:
   - if: runner.os == 'Windows'
+    shell: powershell
     run: |
       $SourceDir   = "${{ inputs.fonts-folder }}"
       $Destination = (New-Object -ComObject Shell.Application).Namespace(0x14)
 
       Get-ChildItem -Path $SourceDir -Include '*.ttf','*.ttc','*.otf' -Recurse | ForEach {
+          echo "Installing $($_.FullName)"
           # Install font
           $Destination.CopyHere($_.FullName,0x10)
       }
-    shell: powershell
   - if: runner.os == 'Linux'
+    shell: bash
     run: |
       cp -r ${{ inputs.fonts-folder }} ~/.local/share/fonts
       fc-cache -f -v
-    shell: bash
