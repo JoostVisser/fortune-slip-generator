@@ -9,4 +9,6 @@ runs:
     run: choco install inkscape
   - if: runner.os == 'Linux'
     shell: bash
-    run: sudo apt install inkscape
+    run: |
+      sudo apt update
+      sudo apt install inkscape
