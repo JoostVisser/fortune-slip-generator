@@ -1,5 +1,4 @@
 use assert_cmd::{assert::Assert, prelude::*};
-use owo_colors::OwoColorize;
 use pretty_assertions::assert_eq;
 use rstest::{fixture, rstest};
 use std::{fs, path::Path, process::Command};
@@ -69,9 +68,9 @@ fn test_cli_skip_checks(mut cmd: Command) {
 
     let assert = cmd.assert().success();
 
-    let checks_count = checks_count_ok_and_x(&assert);
+    let checks_count = count_ok_and_error_in_prereq_checks(&assert);
     assert_eq!(checks_count.ok, 0);
-    assert_eq!(checks_count.x, 0);
+    assert_eq!(checks_count.error, 0);
     assert!(Path::new("fortune_slips.pdf").exists());
 
     cleanup();
@@ -99,19 +98,22 @@ fn assert_cmd_and_ok_x(cmd: &mut Command, ok: usize, x: usize) {
         _ => panic!("Invalid number of OK checks"),
     };
 
-    let checks_count = checks_count_ok_and_x(&assert);
+    let checks_count = count_ok_and_error_in_prereq_checks(&assert);
     assert_eq!(checks_count.ok, ok);
-    assert_eq!(checks_count.x, x);
+    assert_eq!(checks_count.error, x);
 }
 
 struct ChecksCount {
     ok: usize,
-    x: usize,
+    error: usize,
 }
 
-fn checks_count_ok_and_x(assert: &Assert) -> ChecksCount {
+fn count_ok_and_error_in_prereq_checks(assert: &Assert) -> ChecksCount {
     let output = String::from_utf8_lossy(&assert.get_output().stdout);
-    let nr_ok = output.matches(&"OK".green().to_string()).count();
-    let nr_x = output.matches(&"X".red().to_string()).count();
-    ChecksCount { ok: nr_ok, x: nr_x }
+    let nr_ok = output.matches(&" OK\n").count();
+    let nr_x = output.matches(&" Error ").count();
+    ChecksCount {
+        ok: nr_ok,
+        error: nr_x,
+    }
 }

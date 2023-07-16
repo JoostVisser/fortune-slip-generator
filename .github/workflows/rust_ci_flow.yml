@@ -125,7 +125,7 @@ jobs:
     env:
       FOLDER_NAME: "fortune_generator-${{ github.ref_name }}"
       WINDOWS_ZIP: "fortune_generator-${{ github.ref_name }}-windows.zip"
-      LINUX_TAR: "fortune_generator-${{ github.ref_name }}-linux.tar.gz"
+      LINUX_TAR: "fortune_generator-${{ github.ref_name }}-linux.tar.xz"
     permissions:
       contents: write
     needs: [upload_artifacts]
@@ -144,7 +144,7 @@ jobs:
       - run: cp -r data/fonts release/windows/${{ env.FOLDER_NAME}}/
       - run: cp -r data/please_read_me.txt release/linux/${{ env.FOLDER_NAME}}/
       - run: cp -r data/please_read_me.txt release/windows/${{ env.FOLDER_NAME}}/
-      - run: (cd release/linux; tar -cvf ../${{ env.LINUX_TAR }} ${{ env.FOLDER_NAME}} )
+      - run: (cd release/linux; tar -Jcvf ../${{ env.LINUX_TAR }} ${{ env.FOLDER_NAME}} )
       - run: (cd release/windows; zip -r ../${{ env.WINDOWS_ZIP }} ${{ env.FOLDER_NAME}} )
       - name: Release
         uses: softprops/action-gh-release@v1

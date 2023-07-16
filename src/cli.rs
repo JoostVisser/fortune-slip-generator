@@ -3,7 +3,7 @@ use std::path::PathBuf;
 use anyhow::Result;
 use clap::{command, Parser};
 use figlet_rs::FIGfont;
-use owo_colors::OwoColorize;
+use owo_colors::{OwoColorize, Stream};
 
 use crate::{
     cli::checks::check_prerequisites,
@@ -49,5 +49,9 @@ pub fn execute() -> Result<CliArgs> {
 fn print_logo() {
     let standard_font = FIGfont::standard().unwrap();
     let figure = standard_font.convert("Fortune  slips").unwrap();
-    println!("{}", figure.bold());
+
+    println!(
+        "{}",
+        figure.if_supports_color(Stream::Stdout, |text| text.bold())
+    );
 }

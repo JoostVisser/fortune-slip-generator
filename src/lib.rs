@@ -16,6 +16,7 @@
 use std::env;
 
 use owo_colors::OwoColorize;
+use owo_colors::Stream;
 
 use crate::{cli::windows, error::Error};
 
@@ -50,7 +51,7 @@ pub fn run() -> Result<(), Error> {
     println!();
     println!(
         "{} PDF generated at '{}'",
-        "Success!".green().bold(),
+        "Success!".if_supports_color(Stream::Stdout, |text| text.green()),
         &cli_args.output.display()
     );
 

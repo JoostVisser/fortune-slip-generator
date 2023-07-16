@@ -13,9 +13,9 @@ members = [
 
 [dev-dependencies]
 test_utils = { path = "test_utils" }
-rstest = "0.17.0"
 pretty_assertions = "1.3.0"
 assert_cmd = "2.0.11"
+rstest = "0.18.1"
 
 [dependencies]
 rand = "0.8.5"
@@ -33,7 +33,7 @@ log = "0.4.19"
 pretty_env_logger = "0.5.0"
 maplit = "1.0.2"
 figlet-rs = "0.1.5"
-owo-colors = "3.5.0"
+owo-colors = { version = "3.5.0", features=["supports-colors"]}
 which = "4.4.0"
 font-loader = "0.11.0"
 indoc = "2.0.2"

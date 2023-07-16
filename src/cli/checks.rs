@@ -3,7 +3,7 @@ use std::path::Path;
 use anyhow::{anyhow, bail, Result};
 use font_loader::system_fonts;
 use indoc::printdoc;
-use owo_colors::OwoColorize;
+use owo_colors::{OwoColorize, Stream};
 use which::which;
 
 use crate::{cli::windows, fortune::fortune_data::FortuneData};
@@ -48,8 +48,15 @@ fn print_prerequisite(prerequisite: &str, is_installed: &Result<()>) {
     print!("{}: ", prerequisite);
 
     match is_installed {
-        Ok(_) => println!("{}", "OK".green()),
-        Err(msg) => println!("{} - {}", "X".red(), msg.red()),
+        Ok(_) => println!(
+            "{}",
+            "OK".if_supports_color(Stream::Stdout, |text| text.green()),
+        ),
+        Err(msg) => println!(
+            "{} - {}",
+            "Error".if_supports_color(Stream::Stdout, |text| text.red()),
+            msg.if_supports_color(Stream::Stdout, |text| text.red()),
+        ),
     }
 }
 
