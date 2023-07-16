@@ -35,6 +35,8 @@ pub struct CliArgs {
 
 /// Parses the CLI arguments and returns the write options.
 pub fn execute() -> Result<CliArgs> {
+    windows::enable_ansi_support();
+
     let cli = CliArgs::parse();
     print_logo();
     println!("Welcome to the fortune slips generator!");
