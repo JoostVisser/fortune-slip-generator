@@ -2,7 +2,7 @@
 name = "fortune_generator"
 authors = ["Joost Visser"]
 description = "A fortune generator that generates a PDF with fortune slips."
-version = "1.0.1"
+version = "1.0.2"
 edition = "2021"
 
 [workspace]
