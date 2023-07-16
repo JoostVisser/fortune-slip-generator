@@ -9,15 +9,15 @@ With the Fortune Slip Generator, you can create your very own Fortune Slips!
 
 Get the latest version [here](https://github.com/JoostVisser/fortune-slip-generator/releases).
 
-1. [Fortune Slip Generator](#fortune-slip-generator)
-   1. [Sample fortune slip](#sample-fortune-slip)
-   2. [How to fold the fortune slips](#how-to-fold-the-fortune-slips)
-   3. [Getting started](#getting-started)
-      1. [Windows installation](#windows-installation)
-      2. [Linux installation](#linux-installation)
-   4. [Configuration](#configuration)
-      1. [CLI options](#cli-options)
-      2. [Changing the template](#changing-the-template)
+- [Fortune Slip Generator](#fortune-slip-generator)
+  - [Sample fortune slip](#sample-fortune-slip)
+  - [How to fold the fortune slips](#how-to-fold-the-fortune-slips)
+  - [Getting started](#getting-started)
+    - [Windows installation](#windows-installation)
+    - [Linux installation](#linux-installation)
+  - [Configuration](#configuration)
+    - [CLI options](#cli-options)
+    - [Changing the template](#changing-the-template)
 
 ## Sample fortune slip
 
