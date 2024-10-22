@@ -4,12 +4,13 @@ use anyhow::{anyhow, bail, Result};
 use indoc::printdoc;
 use log::debug;
 use owo_colors::{OwoColorize, Stream};
+#[cfg(unix)]
 use rust_fontconfig::{FcFontCache, FcPattern};
 use which::which;
 
 use crate::{cli::windows, fortune::fortune_data::FortuneData};
-#[cfg(target_os = "windows")]
-use font_loader::Font;
+#[cfg(windows)]
+use font_loader::system_fonts;
 
 const REQUIRED_FONTS: [&str; 3] = ["Dosis", "Hina Mincho", "Kaushan Script"];
 
