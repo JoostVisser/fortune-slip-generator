@@ -84,7 +84,7 @@ To install the fonts:
 The installation instructions are for Ubuntu/Debian, but other distros should be similar.
 
 1.  Install dependencies:
-    `sudo apt install inkscape libfontconfig libfontconfig1-dev`
+    `sudo apt install inkscape`
 2.  Install Fonts
     *   Open the fonts from the `fonts` directory
     *   Double-click on the font file and click "Install"

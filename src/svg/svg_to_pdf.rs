@@ -1,6 +1,5 @@
 use std::{
-    path::Path,
-    process::{Command, Stdio},
+    env, path::Path, process::{Command, Stdio}
 };
 
 use anyhow::{anyhow, Ok, Result};
@@ -37,6 +36,10 @@ fn execute_inkscape_command(
 ) -> Result<std::process::ExitStatus> {
     debug!("Input file path: {}", path_to_svg);
     debug!("Export file name: {}", output_path);
+
+    // Add workaround due to Inkscape bug
+    // https://gitlab.com/inkscape/inkscape/-/issues/4716
+    env::set_var("SELF_CALL", "Random non-empty value");
 
     let result = Command::new("inkscape")
         .arg("--export-type=pdf")

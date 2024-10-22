@@ -4,11 +4,22 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.1.0] - 2024-10-22
+
+### Changed
+-   Remove external system dependency on Linux (fontconfig).
+
+### Fixed
+-   Fix issue where Inkscape crashes from running
+    [too many times](https://gitlab.com/inkscape/inkscape/-/issues/4716).
+
 ## [1.0.2] - 2023-07-16
+
 ### Fixed
 -   Fix issues where colour wasn't shown properly on Windows cmd.exe
 
 ## [1.0.1] - 2023-07-16
+
 ### Added
 -   Add a Table of Contents to `README.md`
 -   Add author credits to `please-read-me.txt`
@@ -20,6 +31,7 @@ All notable changes to this project will be documented in this file.
 -   Fix issue where ANSI escape codes were shown if the terminal did not support them
 
 ## [1.0.0] - 2023-07-09
+
 ### Added
 -   Initial release of the Fortune Slip Generator
 

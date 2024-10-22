@@ -1,9 +1,10 @@
 use std::path::Path;
 
 use anyhow::{anyhow, bail, Result};
-use font_loader::system_fonts;
 use indoc::printdoc;
+use log::debug;
 use owo_colors::{OwoColorize, Stream};
+use rust_fontconfig::{FcFontCache, FcPattern};
 use which::which;
 
 use crate::{cli::windows, fortune::fortune_data::FortuneData};
@@ -21,9 +22,7 @@ pub fn check_prerequisites(config_path: &Path) -> Result<()> {
     let fortune_settings_check = check_if_fortune_settings_are_valid(config_path);
 
     print_prerequisite("1. Inkscape is installed", &inkscape_check);
-
     print_prerequisite("2. Fonts are installed", &fonts_check);
-
     print_prerequisite("3. Fortune settings are valid", &fortune_settings_check);
 
     println!();
@@ -67,12 +66,17 @@ pub fn check_if_inkscape_is_installed() -> Result<()> {
 }
 
 pub fn check_if_fonts_are_installed() -> Result<()> {
-    let sysfonts = system_fonts::query_all();
+    let fonts_cache = FcFontCache::build();
 
-    for required_font in &REQUIRED_FONTS {
-        if !sysfonts
-            .iter()
-            .any(|sysfont| sysfont.contains(required_font))
+    debug!("Font cache: {:?}", fonts_cache.list());
+
+    for required_font in REQUIRED_FONTS {
+        if fonts_cache
+            .query(&FcPattern {
+                family: Some(String::from(required_font)),
+                ..Default::default()
+            })
+            .is_none()
         {
             bail!("Font '{}' is not installed.", required_font);
         }
