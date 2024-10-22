@@ -107,7 +107,7 @@ fn no_empty_keys(svg_elem_keys: &SvgKeys, fortune_categories: &[String]) -> Resu
     }
 
     for category in fortune_categories {
-        if svg_elem_keys.cat_to_fortune_keys.contains_key(category) {
+        if !svg_elem_keys.cat_to_fortune_keys.contains_key(category) {
             bail!("Missing fortune category in fortune slip: {}", category);
         }
     }
