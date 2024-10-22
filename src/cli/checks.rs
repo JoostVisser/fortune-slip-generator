@@ -71,12 +71,18 @@ pub fn check_if_fonts_are_installed() -> Result<()> {
     debug!("Font cache: {:?}", fonts_cache.list());
 
     for required_font in REQUIRED_FONTS {
-        if fonts_cache
-            .query(&FcPattern {
-                family: Some(String::from(required_font)),
-                ..Default::default()
-            })
-            .is_none()
+        let font_name_query = &FcPattern {
+            name: Some(String::from(required_font)),
+            ..Default::default()
+        };
+
+        let family_name_query = &FcPattern {
+            family: Some(String::from(required_font)),
+            ..Default::default()
+        };
+
+        if fonts_cache.query(family_name_query).is_none()
+            && fonts_cache.query(font_name_query).is_none()
         {
             bail!("Font '{}' is not installed.", required_font);
         }

@@ -1,5 +1,7 @@
 use std::{
-    env, path::Path, process::{Command, Stdio}
+    env,
+    path::Path,
+    process::{Command, Stdio},
 };
 
 use anyhow::{anyhow, Ok, Result};
