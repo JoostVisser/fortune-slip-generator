@@ -36,7 +36,8 @@ All notable changes to this project will be documented in this file.
 -   Initial release of the Fortune Slip Generator
 
 
-[Unreleased]: https://github.com/JoostVisser/fortune-slip-generator/compare/v1.0.2...main
+[Unreleased]: https://github.com/JoostVisser/fortune-slip-generator/compare/v1.1.0...main
+[1.1.0]: https://github.com/JoostVisser/fortune-slip-generator/compare/v1.0.2...v1.1.0
 [1.0.2]: https://github.com/JoostVisser/fortune-slip-generator/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/JoostVisser/fortune-slip-generator/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/JoostVisser/fortune-slip-generator/tree/v1.0.0
