@@ -65,7 +65,7 @@ jobs:
       - name: Upload executable
         uses: actions/upload-artifact@v4
         with:
-          name: binary
+          name: binary-${{ matrix.runs-on }}
           path: ${{ env.BUILD_FOLDER}}/${{ env.EXECUTABLE_NAME }}
 
   fmt:
@@ -104,7 +104,8 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
-          name: binary
+          name: binary-*
+          merge-multiple: true
       - run: mkdir -p release/linux release/windows
       - run: cp fortune_generator release/linux
       - run: cp fortune_generator.exe release/windows
