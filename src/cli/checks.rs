@@ -7,7 +7,10 @@ use owo_colors::{OwoColorize, Stream};
 use rust_fontconfig::{FcFontCache, FcPattern};
 use which::which;
 
+
 use crate::{cli::windows, fortune::fortune_data::FortuneData};
+#[cfg(target_os = "windows")]
+use crate::cli::windows::check_if_fonts_are_installed;
 
 const REQUIRED_FONTS: [&str; 3] = ["Dosis", "Hina Mincho", "Kaushan Script"];
 
@@ -65,6 +68,7 @@ pub fn check_if_inkscape_is_installed() -> Result<()> {
         .map_err(|_| anyhow!("Inkscape is not installed or hasn't been added to PATH."))
 }
 
+#[cfg(unix)]
 pub fn check_if_fonts_are_installed() -> Result<()> {
     let fonts_cache = FcFontCache::build();
 
@@ -90,6 +94,7 @@ pub fn check_if_fonts_are_installed() -> Result<()> {
 
     Ok(())
 }
+
 
 pub fn check_if_fortune_settings_are_valid(config_path: &Path) -> Result<()> {
     FortuneData::open(config_path).map(|_| ())

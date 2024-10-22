@@ -40,3 +40,6 @@ clap = { version = "4.3.11", features = ["derive"] }
 thiserror = "1.0.43"
 enable-ansi-support = "0.2.1"
 rust-fontconfig = "0.1.7"
+
+[target.'cfg(windows)'.dependencies]
+font-loader = "0.11.0"
