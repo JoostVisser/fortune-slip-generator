@@ -65,7 +65,7 @@ jobs:
       - name: Upload executable
         uses: actions/upload-artifact@v4
         with:
-          name: binary-${{ matrix.runs-on }}
+          name: binary-${{ matrix.os }}
           path: ${{ env.BUILD_FOLDER}}/${{ env.EXECUTABLE_NAME }}
 
   fmt:
