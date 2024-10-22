@@ -80,7 +80,7 @@ impl SvgEditor {
             ))?
             .clone();
 
-        new_xml_elem.attributes = text_elem.attr.clone();
+        new_xml_elem.attributes.clone_from(&text_elem.attr);
         new_xml_elem.set_inner_text(&text_elem.text)?;
 
         Ok(new_xml_elem)

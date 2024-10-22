@@ -82,8 +82,8 @@ fn is_relevant_text_elem(text_elem: &TextElem, fortune_categories: &[String]) ->
 
 fn add_text_elem_to_keys(svg_elem_keys: &mut SvgKeys, text_elem: &TextElem) {
     match &text_elem.text {
-        s if s.contains("header") => svg_elem_keys.header_key = text_elem.id.clone(),
-        s if s.contains("luck_level") => svg_elem_keys.luck_level_key = text_elem.id.clone(),
+        s if s.contains("header") => svg_elem_keys.header_key.clone_from(&text_elem.id),
+        s if s.contains("luck_level") => svg_elem_keys.luck_level_key.clone_from(&text_elem.id),
         s if s.contains('_') => {
             let (category, _) = s.split_once('_').unwrap();
             svg_elem_keys
@@ -107,7 +107,7 @@ fn no_empty_keys(svg_elem_keys: &SvgKeys, fortune_categories: &[String]) -> Resu
     }
 
     for category in fortune_categories {
-        if svg_elem_keys.cat_to_fortune_keys.get(category).is_none() {
+        if svg_elem_keys.cat_to_fortune_keys.contains_key(category) {
             bail!("Missing fortune category in fortune slip: {}", category);
         }
     }
